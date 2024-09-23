@@ -1,1 +1,1 @@
-Pet project for a pathfinder game
+Pet project for a **pathfinder** game
