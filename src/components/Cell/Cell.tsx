@@ -3,6 +3,7 @@
 import { Coordinates } from "@/src/components/Game/Game";
 import { useDroppable } from "@dnd-kit/core";
 import { PropsWithChildren } from "react";
+import { BORDER_COLOR, BORDER_SIZE, CELL_SIZE } from "../Field/Field";
 
 interface CellProps extends PropsWithChildren {
   selfCoordinates: Coordinates;
@@ -13,7 +14,13 @@ const Cell = ({ selfCoordinates, children }: CellProps) => {
 
   return (
     <div
-      className="flex flex-wrap w-5 h-5 p-5 justify-center content-center border-gray-400 border-2 text-center relative"
+      className="flex flex-wrap justify-center content-center text-center relative"
+      style={{
+        width: `${CELL_SIZE}px`,
+        height: `${CELL_SIZE}px`,
+        padding: `${CELL_SIZE / 2}px`,
+        border: `${BORDER_SIZE}px solid ${BORDER_COLOR}`,
+      }}
       ref={setNodeRef}
       title={`x: ${selfCoordinates.x}; y: ${selfCoordinates.y}`}
     >

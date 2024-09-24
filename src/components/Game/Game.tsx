@@ -11,10 +11,10 @@ export interface Coordinates {
 export default function Game() {
   return (
     <>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-5 p-10 justify-center w-full items-center flex-wrap">
         <Field />
+        <Controls />
       </div>
-      <Controls />
     </>
   );
 }

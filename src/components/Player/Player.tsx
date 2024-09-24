@@ -3,21 +3,25 @@
 import Image from "next/image";
 import * as icon from "@/public/arrow.png";
 import { useCoordinatesStore } from "@/src/store";
+import { CELL_SIZE, BORDER_SIZE, GAP_SIZE } from "../Field/Field";
 
 const Player = () => {
   const { coordinates, rotationDegree } = useCoordinatesStore();
-  const cellSize = 40;
-  const borderSize = 2;
+
   const style = {
-    left: `${coordinates.x * (cellSize + 2 * borderSize) + borderSize}px`,
-    top: `${coordinates.y * (cellSize + 2 * borderSize) + borderSize}px`,
-    width: "40px",
-    height: "40px",
+    left: `${
+      coordinates.x * (CELL_SIZE + 2 * BORDER_SIZE + GAP_SIZE) + BORDER_SIZE
+    }px`,
+    top: `${
+      coordinates.y * (CELL_SIZE + 2 * BORDER_SIZE + GAP_SIZE) + BORDER_SIZE
+    }px`,
+    width: `${CELL_SIZE}px`,
+    height: `${CELL_SIZE}px`,
     transition: "0.5s",
   };
 
   return (
-    <div className="border-transparent absolute" style={style}>
+    <div className="absolute" style={style}>
       <Image
         src={icon}
         alt={"player"}
