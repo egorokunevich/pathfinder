@@ -1,14 +1,7 @@
-import Field from '@/src/components/Field/Field';
+'use client';
+
+import Game from '@/src/components/Game/Game';
 
 export default function Home() {
-  const field = [
-    ['x', 'x', 'x'],
-    ['x', 'x', 'x'],
-    ['x', 'x', 'x'],
-  ];
-  return (
-    <div>
-      <Field field={field} />
-    </div>
-  );
+  return <Game />;
 }
