@@ -9,7 +9,7 @@ const getPlayerTransform = (viewDirection: PlayerViewDirection) => {
     degree = 180;
   }
   if (viewDirection === PlayerViewDirection.Left) {
-    degree = -90;
+    degree = 270;
   }
   return `rotate(${degree}deg)`;
 };
