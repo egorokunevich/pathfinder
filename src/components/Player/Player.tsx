@@ -25,6 +25,7 @@ const Player = () => {
       <Image
         src={icon}
         alt={"player"}
+        priority={true}
         style={{
           transform: `rotate(${rotationDegree}deg)`,
           transition: "0.5s",

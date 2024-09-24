@@ -1,17 +1,16 @@
 import { PlayerViewDirection } from "@/src/store";
 
-const getPlayerTransform = (viewDirection: PlayerViewDirection) => {
-  let degree = 0;
+const getInitialRotationDegree = (viewDirection: PlayerViewDirection) => {
   if (viewDirection === PlayerViewDirection.Right) {
-    degree = 90;
+    return 90;
   }
   if (viewDirection === PlayerViewDirection.Down) {
-    degree = 180;
+    return 180;
   }
   if (viewDirection === PlayerViewDirection.Left) {
-    degree = 270;
+    return 270;
   }
-  return `rotate(${degree}deg)`;
+  return 0;
 };
 
-export default getPlayerTransform;
+export default getInitialRotationDegree;

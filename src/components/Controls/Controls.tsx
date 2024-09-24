@@ -1,10 +1,8 @@
 "use client";
 
 import useControls from "@/src/hooks/useControls";
-import { useCoordinatesStore } from "@/src/store";
 
 const Controls = () => {
-  const { rotateLeft, rotateRight } = useCoordinatesStore();
   const { moveForward, moveBack, turnLeft, turnRight } = useControls();
 
   return (
@@ -20,7 +18,6 @@ const Controls = () => {
           className="border-2 border-black p-2  w-14"
           onClick={() => {
             turnLeft();
-            rotateLeft();
           }}
         >
           Left
@@ -32,7 +29,6 @@ const Controls = () => {
           className="border-2 border-black p-2  w-14"
           onClick={() => {
             turnRight();
-            rotateRight();
           }}
         >
           Right

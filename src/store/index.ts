@@ -14,6 +14,7 @@ type CoordinatesStore = {
   view: PlayerViewDirection;
   setView: (newView: PlayerViewDirection) => void;
   rotationDegree: number;
+  setRotationDegree: (newDegree: number) => void;
   rotateRight: () => void;
   rotateLeft: () => void;
 };
@@ -25,6 +26,7 @@ const useCoordinatesStore = create<CoordinatesStore>()((set) => ({
   view: PlayerViewDirection.Up,
   setView: (newView) => set(() => ({ view: newView })),
   rotationDegree: 0,
+  setRotationDegree: (newDegree) => set(() => ({ rotationDegree: newDegree })),
   rotateRight: () =>
     set((state) => ({ rotationDegree: state.rotationDegree + 90 })),
   rotateLeft: () =>

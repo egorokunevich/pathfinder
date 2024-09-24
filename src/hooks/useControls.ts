@@ -16,7 +16,14 @@ export enum TurnDirection {
 }
 
 const useControls = () => {
-  const { coordinates, view, setCoordinates, setView } = useCoordinatesStore();
+  const {
+    coordinates,
+    view,
+    setCoordinates,
+    setView,
+    rotateLeft,
+    rotateRight,
+  } = useCoordinatesStore();
 
   const getNewCoordinates = (direction: GoDirections) => {
     if (
@@ -104,12 +111,13 @@ const useControls = () => {
   const turnLeft = () => {
     const newViewDirection = getNewView(TurnDirection.Left);
     setView(newViewDirection);
+    rotateLeft();
   };
 
   const turnRight = () => {
     const newViewDirection = getNewView(TurnDirection.Right);
     setView(newViewDirection);
-    console.log(newViewDirection);
+    rotateRight();
   };
 
   return { moveForward, moveBack, turnLeft, turnRight };
