@@ -1,17 +1,15 @@
-'use client';
+"use client";
 
-import { useContext } from 'react';
-import ViewDirectionContext, {
-  PlayerViewDirection,
-} from '../context/ViewDirectionContext/ViewDirectionContext';
+import { PlayerViewDirection, useCoordinatesStore } from "../store";
 
 export enum TurnDirection {
-  Left = 'left',
-  Right = 'right',
+  Left = "left",
+  Right = "right",
 }
 
 const useTurn = () => {
-  const view = useContext(ViewDirectionContext);
+  const { view } = useCoordinatesStore();
+
   return (turnDirection: TurnDirection) => {
     if (
       (view === PlayerViewDirection.Right &&
