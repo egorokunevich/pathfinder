@@ -1,22 +1,13 @@
-'use client';
+"use client";
 
-import { Dispatch, SetStateAction } from 'react';
-import { Coordinates } from '../Game/Game';
-import useMove, { GoDirections } from '@/src/hooks/useMove';
-import useTurn, { TurnDirection } from '@/src/hooks/useTurn';
-import { PlayerViewDirection } from '@/src/context/ViewDirectionContext/ViewDirectionContext';
+import useMove, { GoDirections } from "@/src/hooks/useMove";
+import useTurn, { TurnDirection } from "@/src/hooks/useTurn";
+import { useCoordinatesStore } from "@/src/store";
 
-interface ControlsProps {
-  setCoordinates: Dispatch<SetStateAction<Coordinates>>;
-  setPlayerViewDirection: Dispatch<SetStateAction<PlayerViewDirection>>;
-}
-
-const Controls = ({
-  setCoordinates,
-  setPlayerViewDirection,
-}: ControlsProps) => {
+const Controls = () => {
   const move = useMove();
   const turn = useTurn();
+  const { setCoordinates, setView } = useCoordinatesStore();
 
   const moveForward = () => {
     const newCoordinates = move(GoDirections.Forward);
@@ -30,12 +21,12 @@ const Controls = ({
 
   const turnLeft = () => {
     const newViewDirection = turn(TurnDirection.Left);
-    setPlayerViewDirection(newViewDirection);
+    setView(newViewDirection);
   };
 
   const turnRight = () => {
     const newViewDirection = turn(TurnDirection.Right);
-    setPlayerViewDirection(newViewDirection);
+    setView(newViewDirection);
   };
 
   return (
