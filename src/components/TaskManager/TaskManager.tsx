@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { GoDirections, TurnDirection } from "@/src/hooks/useControls";
-import Action, { StoredAction } from "../Action/Action";
-// import { useActionStore } from "@/src/store";
-import { useEffect, useState } from "react";
-import { useActionStore } from "@/src/store";
+import { useEffect } from 'react';
+
+import Action from '@/src/components/Action/Action';
+import { GoDirections, TurnDirection } from '@/src/hooks/useControls';
+import { useActionStore } from '@/src/store';
 
 // How it should work:
 // In "Actions to run" there are available actions for this level.
@@ -12,10 +12,12 @@ import { useActionStore } from "@/src/store";
 // Clicking on "Run" button runs those actions one by one.
 
 const TaskManager = () => {
-  // const { moveActionToStore } = useActionStore();
-  const [availableActions, setAvailableActions] = useState<StoredAction[]>();
-  const { selectedActions, toggleSelectedActions, setCurrentActions } =
-    useActionStore();
+  const {
+    selectedActions,
+    unselectedActions,
+    toggleSelectedActions,
+    setUnselectedActions,
+  } = useActionStore();
 
   const actionDirections = [
     TurnDirection.Left,
@@ -25,7 +27,8 @@ const TaskManager = () => {
   ];
 
   useEffect(() => {
-    setAvailableActions(
+    console.log('rerender');
+    setUnselectedActions(
       actionDirections.map((act, i) => {
         return {
           id: act + i,
@@ -35,12 +38,8 @@ const TaskManager = () => {
     );
   }, []);
 
-  useEffect(() => {
-    setCurrentActions(availableActions || []);
-  }, [availableActions]);
-
   const drawUnselectedActions = () => {
-    return availableActions?.map((action) => {
+    return unselectedActions.map((action) => {
       const isSelected = !!selectedActions.find(
         (item) => item.id === action.id
       );
@@ -58,19 +57,14 @@ const TaskManager = () => {
   };
 
   const drawSelectedActions = () => {
-    return availableActions?.map((action) => {
-      const isSelected = !!selectedActions.find(
-        (item) => item.id === action.id
-      );
+    return selectedActions?.map((action) => {
       return (
-        isSelected && (
-          <Action
-            id={action.id}
-            key={action.id}
-            action={action.action}
-            toggleIsSelected={toggleSelectedActions}
-          />
-        )
+        <Action
+          id={action.id}
+          key={action.id}
+          action={action.action}
+          toggleIsSelected={toggleSelectedActions}
+        />
       );
     });
   };

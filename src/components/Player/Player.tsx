@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import * as icon from "@/public/arrow.png";
-import { useCoordinatesStore } from "@/src/store";
-import { CELL_SIZE, BORDER_SIZE, GAP_SIZE } from "../Field/Field";
+import Image from 'next/image';
+
+import * as icon from '@/public/arrow.png';
+import { CELL_SIZE, BORDER_SIZE, GAP_SIZE } from '@/src/components/Field/Field';
+import { useCoordinatesStore } from '@/src/store';
 
 const Player = () => {
   const { coordinates, rotationDegree } = useCoordinatesStore();
@@ -17,18 +18,18 @@ const Player = () => {
     }px`,
     width: `${CELL_SIZE}px`,
     height: `${CELL_SIZE}px`,
-    transition: "0.5s",
+    transition: '0.5s',
   };
 
   return (
     <div className="absolute" style={style}>
       <Image
         src={icon}
-        alt={"player"}
+        alt={'player'}
         priority={true}
         style={{
           transform: `rotate(${rotationDegree}deg)`,
-          transition: "0.5s",
+          transition: '0.5s',
         }}
       />
     </div>

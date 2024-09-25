@@ -1,15 +1,14 @@
-import { create } from "zustand";
-import { devtools } from "zustand/middleware";
-import { Coordinates } from "../components/Game/Game";
-import { StoredAction } from "../components/Action/Action";
-// import { TurnDirection, GoDirections } from "../hooks/useControls";
-// import Action from "../components/Action/Action";
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
+
+import { StoredAction } from '@/src/components/Action/Action';
+import { Coordinates } from '@/src/components/Game/Game';
 
 export enum PlayerViewDirection {
-  Up = "up",
-  Down = "down",
-  Left = "left",
-  Right = "right",
+  Up = 'up',
+  Down = 'down',
+  Left = 'left',
+  Right = 'right',
 }
 
 interface CoordinatesStore {
@@ -23,13 +22,12 @@ interface CoordinatesStore {
   rotateLeft: () => void;
 }
 
-// type Action = TurnDirection | GoDirections;
-
 interface ActionStore {
   selectedActions: StoredAction[];
+  unselectedActions: StoredAction[];
   currentActions: StoredAction[];
   toggleSelectedActions: (action: StoredAction) => void;
-  setCurrentActions: (action: StoredAction[]) => void;
+  setUnselectedActions: (action: StoredAction[]) => void;
 }
 
 const useCoordinatesStore = create<CoordinatesStore>()(
@@ -52,6 +50,7 @@ const useCoordinatesStore = create<CoordinatesStore>()(
 const useActionStore = create<ActionStore>()(
   devtools((set) => ({
     selectedActions: [],
+    unselectedActions: [],
     currentActions: [],
     toggleSelectedActions: (action) =>
       set((state) => {
@@ -60,9 +59,7 @@ const useActionStore = create<ActionStore>()(
         );
 
         if (isSelected) {
-          console.log(
-            state.selectedActions.filter((item) => item.id !== action.id)
-          );
+          state.unselectedActions.push(action);
           return {
             selectedActions: state.selectedActions.filter(
               (item) => item.id !== action.id
@@ -70,11 +67,14 @@ const useActionStore = create<ActionStore>()(
           };
         } else {
           state.selectedActions.push(action);
+          return {
+            unselectedActions: state.unselectedActions.filter(
+              (item) => item.id !== action.id
+            ),
+          };
         }
-        console.log(state.selectedActions);
-        return { selectedActions: state.selectedActions };
       }),
-    setCurrentActions: (actions) => set({ currentActions: actions }),
+    setUnselectedActions: (actions) => set({ unselectedActions: actions }),
   }))
 );
 

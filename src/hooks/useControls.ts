@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { FIELD_SIZE } from "../components/Field/Field";
-import { PlayerViewDirection, useCoordinatesStore } from "../store";
+import { FIELD_SIZE } from '@/src/components/Field/Field';
+import { PlayerViewDirection, useCoordinatesStore } from '@/src/store';
 
 export enum GoDirections {
-  Forward = "forward",
-  Back = "back",
-  TurnLeft = "turn-left",
-  TurnRight = "turn-right",
+  Forward = 'forward',
+  Back = 'back',
+  TurnLeft = 'turn-left',
+  TurnRight = 'turn-right',
 }
 
 export enum TurnDirection {
-  Left = "left",
-  Right = "right",
+  Left = 'left',
+  Right = 'right',
 }
 
 const useControls = () => {

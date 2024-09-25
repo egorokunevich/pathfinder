@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Controls from "../Controls/Controls";
-import Field from "../Field/Field";
-import TaskManager from "../TaskManager/TaskManager";
+import Controls from '@/src/components/Controls/Controls';
+import Field from '@/src/components/Field/Field';
+import TaskManager from '@/src/components/TaskManager/TaskManager';
 
 export interface Coordinates {
   x: number;

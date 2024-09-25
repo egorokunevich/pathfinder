@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import useControls from "@/src/hooks/useControls";
+import useControls from '@/src/hooks/useControls';
 
 const Controls = () => {
   const { moveForward, moveBack, turnLeft, turnRight } = useControls();

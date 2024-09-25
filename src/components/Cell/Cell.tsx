@@ -1,16 +1,21 @@
-"use client";
+'use client';
 
-import { Coordinates } from "@/src/components/Game/Game";
-import { useDroppable } from "@dnd-kit/core";
-import { PropsWithChildren } from "react";
-import { BORDER_COLOR, BORDER_SIZE, CELL_SIZE } from "../Field/Field";
+import { useDroppable } from '@dnd-kit/core';
+import { PropsWithChildren } from 'react';
+
+import {
+  BORDER_COLOR,
+  BORDER_SIZE,
+  CELL_SIZE,
+} from '@/src/components/Field/Field';
+import { Coordinates } from '@/src/components/Game/Game';
 
 interface CellProps extends PropsWithChildren {
   selfCoordinates: Coordinates;
 }
 
 const Cell = ({ selfCoordinates, children }: CellProps) => {
-  const { setNodeRef } = useDroppable({ id: "cell" });
+  const { setNodeRef } = useDroppable({ id: 'cell' });
 
   return (
     <div

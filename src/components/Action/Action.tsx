@@ -2,7 +2,7 @@ import {
   // useControls,
   GoDirections,
   TurnDirection,
-} from "@/src/hooks/useControls";
+} from '@/src/hooks/useControls';
 
 export interface StoredAction {
   id: string;

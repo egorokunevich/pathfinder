@@ -1,5 +1,5 @@
-import { Coordinates } from "../components/Game/Game";
-import { PlayerViewDirection } from "../store";
+import { Coordinates } from '@/src/components/Game/Game';
+import { PlayerViewDirection } from '@/src/store';
 
 export type Field = string[][];
 
@@ -14,11 +14,11 @@ export const levels: Level[] = [
   {
     id: 0,
     field: [
-      ["", "", "", "", ""],
-      ["", "", "", "", ""],
-      ["", "", "", "", ""],
-      ["", "", "", "", ""],
-      ["", "", "", "", ""],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
     ],
     initialCoordinates: { x: 0, y: 0 },
     initialViewDirection: PlayerViewDirection.Up,
@@ -26,11 +26,11 @@ export const levels: Level[] = [
   {
     id: 1,
     field: [
-      ["", "", "", "", ""],
-      ["", "", "", "", ""],
-      ["", "", "", "", ""],
-      ["", "", "", "", ""],
-      ["", "", "", "", ""],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
+      ['', '', '', '', ''],
     ],
     initialCoordinates: { x: 1, y: 1 },
     initialViewDirection: PlayerViewDirection.Right,
