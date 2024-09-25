@@ -3,7 +3,10 @@
 import { useEffect } from 'react';
 
 import Action from '@/src/components/Action/Action';
-import { GoDirections, TurnDirection } from '@/src/hooks/useControls';
+import useControls, {
+  GoDirections,
+  TurnDirection,
+} from '@/src/hooks/useControls';
 import { useActionStore } from '@/src/store';
 
 // How it should work:
@@ -21,13 +24,15 @@ const TaskManager = () => {
 
   const actionDirections = [
     TurnDirection.Left,
+    TurnDirection.Right,
     GoDirections.Forward,
     GoDirections.Forward,
     GoDirections.Forward,
   ];
 
+  const { runMovement, moveForward } = useControls();
+
   useEffect(() => {
-    console.log('rerender');
     setUnselectedActions(
       actionDirections.map((act, i) => {
         return {
@@ -69,10 +74,23 @@ const TaskManager = () => {
     });
   };
 
+  const runActions = () => {
+    selectedActions.forEach((item) => {
+      moveForward();
+      moveForward();
+      moveForward();
+    });
+  };
+
   return (
     <>
       <div className="flex gap-2 w-full p-2 min-h-20 border-2 border-gray">
-        <button className="w-16 h-16 border-2 border-black p-2">Run</button>
+        <button
+          onClick={runActions}
+          className="w-16 h-16 border-2 border-black p-2"
+        >
+          Run
+        </button>
         <div>
           <div>
             Actions to Run

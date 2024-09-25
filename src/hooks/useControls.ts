@@ -6,8 +6,6 @@ import { PlayerViewDirection, useCoordinatesStore } from '@/src/store';
 export enum GoDirections {
   Forward = 'forward',
   Back = 'back',
-  TurnLeft = 'turn-left',
-  TurnRight = 'turn-right',
 }
 
 export enum TurnDirection {
@@ -101,6 +99,7 @@ const useControls = () => {
   const moveForward = () => {
     const newCoordinates = getNewCoordinates(GoDirections.Forward);
     setCoordinates(newCoordinates);
+    console.log('move forward to ', newCoordinates);
   };
 
   const moveBack = () => {
@@ -120,7 +119,22 @@ const useControls = () => {
     rotateRight();
   };
 
-  return { moveForward, moveBack, turnLeft, turnRight };
+  const runMovement = (action: TurnDirection | GoDirections) => {
+    if (action === GoDirections.Forward) {
+      moveForward();
+    }
+    if (action === GoDirections.Back) {
+      moveBack();
+    }
+    if (action === TurnDirection.Right) {
+      turnRight();
+    }
+    if (action === TurnDirection.Left) {
+      turnLeft();
+    }
+  };
+
+  return { moveForward, moveBack, turnLeft, turnRight, runMovement };
 };
 
 export default useControls;
