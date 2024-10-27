@@ -3,6 +3,7 @@ import { devtools } from 'zustand/middleware';
 
 import { StoredAction } from '@/src/components/Action/Action';
 import { Coordinates } from '@/src/components/Game/Game';
+import { CellTypes } from '@/src/enums/CellTypes';
 import { GoDirection } from '@/src/enums/GoDirection';
 import { PlayerViewDirection } from '@/src/enums/PlayerViewDirection';
 import { TurnDirection } from '@/src/enums/TurnDirection';
@@ -97,10 +98,6 @@ const getNewCoordinates = (
   return coordinates;
 };
 
-const isWall = (cell: string) => {
-  return cell === 'wall' ? true : false;
-};
-
 const useCoordinatesStore = create<CoordinatesStore>()(
   devtools((set, getState) => ({
     coordinates: { x: 0, y: 0 },
@@ -120,9 +117,33 @@ const useCoordinatesStore = create<CoordinatesStore>()(
       );
       const cell = level.field[newCoordinates.y][newCoordinates.x];
 
-      set(() => ({
-        coordinates: isWall(cell) ? coordinates : newCoordinates,
-      }));
+      switch (cell) {
+        case CellTypes.Wall:
+          // Player shouldn't move
+          set(() => ({
+            coordinates: coordinates,
+          }));
+          break;
+        case CellTypes.Goal:
+          // Winning condition
+          set(() => ({
+            coordinates: newCoordinates,
+          }));
+          console.log('win');
+          break;
+        case CellTypes.Lava:
+          // Losing condition
+          set(() => ({
+            coordinates: newCoordinates,
+          }));
+          console.log('fail');
+          break;
+        default:
+          // Player should move
+          set(() => ({
+            coordinates: newCoordinates,
+          }));
+      }
     },
     rotate: (turnDirection: TurnDirection) => {
       set((state) => ({
@@ -132,7 +153,7 @@ const useCoordinatesStore = create<CoordinatesStore>()(
             : state.rotationDegree - 90,
       }));
     },
-    level: levels[0],
+    level: levels[1],
     setLevel: (newLevel) => set(() => ({ level: newLevel })),
     CELL_SIZE: 50,
     BORDER_SIZE: 1,

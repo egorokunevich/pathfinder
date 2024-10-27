@@ -8,7 +8,7 @@ import { useCoordinatesStore } from '@/src/store';
 
 const Controls = () => {
   const { move, rotate } = useCoordinatesStore();
-  const [showControls, setShowControls] = useState(false);
+  const [showControls, setShowControls] = useState(true);
 
   return (
     <>

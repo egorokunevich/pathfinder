@@ -12,9 +12,11 @@ export interface Coordinates {
 export default function Game() {
   return (
     <div className="game flex w-full justify-center items-center">
-      <div className="flex gap-5 p-10 justify-center max-w-screen-xl w-full flex-wrap">
-        <Field />
-        <div className="flex flex-col gap-5">
+      <div className="flex gap-5 p-10 justify-center max-w-screen-xl w-full">
+        <div>
+          <Field />
+        </div>
+        <div className="flex flex-col gap-5 w-full">
           <TaskManager />
           <Controls />
         </div>

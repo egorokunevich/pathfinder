@@ -15,7 +15,7 @@ const Field = () => {
   useEffect(() => {
     setCoordinates(level.initialCoordinates);
     setRotationDegree(getInitialRotationDegree(level.initialViewDirection));
-  }, []);
+  }, [level.initialCoordinates, level.initialViewDirection]);
 
   const createField = () => {
     return field.map((row, y) => {
@@ -29,11 +29,7 @@ const Field = () => {
           {row.map((el, x) => {
             // Create a cell
             return (
-              <Cell
-                key={uuidv4()}
-                selfCoordinates={{ x, y }}
-                isWall={el === 'wall'}
-              />
+              <Cell key={uuidv4()} selfCoordinates={{ x, y }} value={el} />
             );
           })}
         </div>

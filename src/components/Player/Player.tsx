@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-import * as icon from '@/public/arrow.png';
+import * as icon from '@/public/icons/arrow.png';
 import { useCoordinatesStore } from '@/src/store';
 
 const Player = () => {

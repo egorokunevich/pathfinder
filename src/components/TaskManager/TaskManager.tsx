@@ -4,11 +4,10 @@ import { useEffect } from 'react';
 
 import Action from '@/src/components/Action/Action';
 import { GoDirection } from '@/src/enums/GoDirection';
-import { TurnDirection } from '@/src/enums/TurnDirection';
 import { useActionStore, useCoordinatesStore } from '@/src/store';
 
 const TaskManager = () => {
-  const { move, rotate } = useCoordinatesStore();
+  const { move, rotate, level } = useCoordinatesStore();
 
   const {
     selectedActions,
@@ -18,14 +17,7 @@ const TaskManager = () => {
   } = useActionStore();
 
   // List of available actions
-  const actionDirections = [
-    TurnDirection.Left,
-    TurnDirection.Right,
-    GoDirection.Forward,
-    GoDirection.Forward,
-    GoDirection.Back,
-    GoDirection.Forward,
-  ];
+  const actionDirections = level.actions;
 
   useEffect(() => {
     setUnselectedActions(
@@ -89,23 +81,20 @@ const TaskManager = () => {
 
   return (
     <>
-      <div className="flex gap-2 w-full p-2 min-h-20 border-2 border-gray">
+      <div className="flex gap-5 w-full p-2 relative min-h-20 items-center border-2 border-gray">
+        <span className="absolute left-20 top-0">Actions to Run</span>
         <button
           onClick={runActions}
           className="w-16 h-16 border-2 border-black p-2"
         >
           Run
         </button>
-        <div>
-          <div>
-            Actions to Run
-            {drawSelectedActions()}
-          </div>
-        </div>
+        <div className="flex gap-2 pt-4">{drawSelectedActions()}</div>
       </div>
-      <div className="flex gap-2 w-full p-2 min-h-20 border-2 border-gray">
-        Available Actions
-        {drawUnselectedActions()}
+
+      <div className="flex gap-2 w-full p-2 relative min-h-20 items-center border-2 border-gray">
+        <span className="absolute left-3 top-0">Available Actions</span>
+        <div className="flex gap-2 pt-4">{drawUnselectedActions()}</div>
       </div>
     </>
   );

@@ -8,18 +8,37 @@ import { useCoordinatesStore } from '@/src/store';
 
 interface CellProps extends PropsWithChildren {
   selfCoordinates: Coordinates;
-  isWall: boolean;
+  value: string;
 }
 
-const Cell = ({ selfCoordinates, isWall, children }: CellProps) => {
+const getCellStyle = (value: string) => {
+  let style = '';
+  switch (value) {
+    case 'wall':
+      style = 'bg-black';
+      break;
+    case 'goal':
+      style = 'bg-green-500';
+      break;
+    case 'lava':
+      style = 'bg-red-500';
+      break;
+    default:
+      style = 'bg-white';
+  }
+
+  return style;
+};
+
+const Cell = ({ selfCoordinates, value, children }: CellProps) => {
   const { setNodeRef } = useDroppable({ id: 'cell' });
   const { BORDER_SIZE, CELL_SIZE, BORDER_COLOR } = useCoordinatesStore();
 
   return (
     <div
-      className={`flex flex-wrap justify-center content-center text-center relative ${
-        isWall ? 'bg-black' : 'bg-white'
-      }`}
+      className={`flex flex-wrap justify-center content-center text-center relative ${getCellStyle(
+        value
+      )}`}
       style={{
         width: `${CELL_SIZE}px`,
         height: `${CELL_SIZE}px`,
