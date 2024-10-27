@@ -21,11 +21,10 @@ export const BORDER_COLOR = '#bbbbbb'; // Cell's border color
 export const GAP_SIZE = 20; // Size between cells
 
 const Field = () => {
-  const { setCoordinates, setView, setRotationDegree } = useCoordinatesStore();
+  const { setCoordinates, setRotationDegree } = useCoordinatesStore();
 
   useEffect(() => {
     setCoordinates(level.initialCoordinates);
-    setView(level.initialViewDirection);
     setRotationDegree(getInitialRotationDegree(level.initialViewDirection));
   }, []);
 

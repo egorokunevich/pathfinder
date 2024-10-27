@@ -3,18 +3,13 @@
 import { useEffect } from 'react';
 
 import Action from '@/src/components/Action/Action';
-import useControls, {
-  GoDirections,
-  TurnDirection,
-} from '@/src/hooks/useControls';
-import { useActionStore } from '@/src/store';
-
-// How it should work:
-// In "Actions to run" there are available actions for this level.
-// Clicking it should move the Action to the "Actions to Run" field.
-// Clicking on "Run" button runs those actions one by one.
+import { GoDirection } from '@/src/enums/GoDirection';
+import { TurnDirection } from '@/src/enums/TurnDirection';
+import { useActionStore, useCoordinatesStore } from '@/src/store';
 
 const TaskManager = () => {
+  const { move, rotate } = useCoordinatesStore();
+
   const {
     selectedActions,
     unselectedActions,
@@ -22,15 +17,15 @@ const TaskManager = () => {
     setUnselectedActions,
   } = useActionStore();
 
+  // List of available actions
   const actionDirections = [
     TurnDirection.Left,
     TurnDirection.Right,
-    GoDirections.Forward,
-    GoDirections.Forward,
-    GoDirections.Forward,
+    GoDirection.Forward,
+    GoDirection.Forward,
+    GoDirection.Back,
+    GoDirection.Forward,
   ];
-
-  const { runMovement, moveForward } = useControls();
 
   useEffect(() => {
     setUnselectedActions(
@@ -43,6 +38,7 @@ const TaskManager = () => {
     );
   }, []);
 
+  // Render available actions
   const drawUnselectedActions = () => {
     return unselectedActions.map((action) => {
       const isSelected = !!selectedActions.find(
@@ -61,6 +57,7 @@ const TaskManager = () => {
     });
   };
 
+  // Render actions that are selected to run
   const drawSelectedActions = () => {
     return selectedActions?.map((action) => {
       return (
@@ -74,11 +71,19 @@ const TaskManager = () => {
     });
   };
 
+  // TODO: Clear setTimeouts
   const runActions = () => {
-    selectedActions.forEach((item) => {
-      moveForward();
-      moveForward();
-      moveForward();
+    selectedActions.forEach((item, id) => {
+      setTimeout(() => {
+        if (
+          item.action === GoDirection.Forward ||
+          item.action === GoDirection.Back
+        ) {
+          move(item.action);
+        } else {
+          rotate(item.action);
+        }
+      }, (id + 1) * 250);
     });
   };
 

@@ -18,20 +18,13 @@ const Player = () => {
     }px`,
     width: `${CELL_SIZE}px`,
     height: `${CELL_SIZE}px`,
-    transition: '0.5s',
+    transform: `rotate(${rotationDegree}deg)`,
+    transition: '0.25s',
   };
 
   return (
     <div className="absolute" style={style}>
-      <Image
-        src={icon}
-        alt={'player'}
-        priority={true}
-        style={{
-          transform: `rotate(${rotationDegree}deg)`,
-          transition: '0.5s',
-        }}
-      />
+      <Image src={icon} alt={'player'} priority={true} />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { PlayerViewDirection } from '@/src/store';
+import { PlayerViewDirection } from '@/src/enums/PlayerViewDirection';
 
 const getInitialRotationDegree = (viewDirection: PlayerViewDirection) => {
   if (viewDirection === PlayerViewDirection.Right) {

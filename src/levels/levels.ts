@@ -1,5 +1,5 @@
 import { Coordinates } from '@/src/components/Game/Game';
-import { PlayerViewDirection } from '@/src/store';
+import { PlayerViewDirection } from '@/src/enums/PlayerViewDirection';
 
 export type Field = string[][];
 
@@ -21,7 +21,7 @@ export const levels: Level[] = [
       ['', '', '', '', ''],
     ],
     initialCoordinates: { x: 0, y: 0 },
-    initialViewDirection: PlayerViewDirection.Up,
+    initialViewDirection: PlayerViewDirection.Right,
   },
   {
     id: 1,

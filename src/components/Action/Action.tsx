@@ -1,38 +1,16 @@
-import {
-  // useControls,
-  GoDirections,
-  TurnDirection,
-} from '@/src/hooks/useControls';
+import { GoDirection } from '@/src/enums/GoDirection';
+import { TurnDirection } from '@/src/enums/TurnDirection';
 
 export interface StoredAction {
   id: string;
-  action: TurnDirection | GoDirections;
+  action: TurnDirection | GoDirection;
 }
 
 interface ActionProps extends StoredAction {
   toggleIsSelected: (action: StoredAction) => void;
-  // runAction: () => void;
 }
 
 const Action = ({ action, id, toggleIsSelected }: ActionProps) => {
-  // const { moveForward, moveBack, turnLeft, turnRight } = useControls();
-
-  // Run this handler when "Run" button is clicked
-  // const handleActionRun = () => {
-  //   if (action === TurnDirection.Left) {
-  //     turnLeft();
-  //   }
-  //   if (action === TurnDirection.Right) {
-  //     turnRight();
-  //   }
-  //   if (action === GoDirections.Forward) {
-  //     moveForward();
-  //   }
-  //   if (action === GoDirections.Back) {
-  //     moveBack();
-  //   }
-  // };
-
   const handleClick = () => {
     toggleIsSelected({ action, id });
   };
