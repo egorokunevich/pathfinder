@@ -3,23 +3,23 @@
 import { useDroppable } from '@dnd-kit/core';
 import { PropsWithChildren } from 'react';
 
-import {
-  BORDER_COLOR,
-  BORDER_SIZE,
-  CELL_SIZE,
-} from '@/src/components/Field/Field';
 import { Coordinates } from '@/src/components/Game/Game';
+import { useCoordinatesStore } from '@/src/store';
 
 interface CellProps extends PropsWithChildren {
   selfCoordinates: Coordinates;
+  isWall: boolean;
 }
 
-const Cell = ({ selfCoordinates, children }: CellProps) => {
+const Cell = ({ selfCoordinates, isWall, children }: CellProps) => {
   const { setNodeRef } = useDroppable({ id: 'cell' });
+  const { BORDER_SIZE, CELL_SIZE, BORDER_COLOR } = useCoordinatesStore();
 
   return (
     <div
-      className="flex flex-wrap justify-center content-center text-center relative"
+      className={`flex flex-wrap justify-center content-center text-center relative ${
+        isWall ? 'bg-black' : 'bg-white'
+      }`}
       style={{
         width: `${CELL_SIZE}px`,
         height: `${CELL_SIZE}px`,

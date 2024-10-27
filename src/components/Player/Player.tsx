@@ -3,11 +3,11 @@
 import Image from 'next/image';
 
 import * as icon from '@/public/arrow.png';
-import { CELL_SIZE, BORDER_SIZE, GAP_SIZE } from '@/src/components/Field/Field';
 import { useCoordinatesStore } from '@/src/store';
 
 const Player = () => {
-  const { coordinates, rotationDegree } = useCoordinatesStore();
+  const { coordinates, rotationDegree, CELL_SIZE, BORDER_SIZE, GAP_SIZE } =
+    useCoordinatesStore();
 
   const style = {
     left: `${

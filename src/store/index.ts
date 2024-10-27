@@ -2,11 +2,11 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 import { StoredAction } from '@/src/components/Action/Action';
-import { FIELD_SIZE } from '@/src/components/Field/Field';
 import { Coordinates } from '@/src/components/Game/Game';
 import { GoDirection } from '@/src/enums/GoDirection';
 import { PlayerViewDirection } from '@/src/enums/PlayerViewDirection';
 import { TurnDirection } from '@/src/enums/TurnDirection';
+import { Level, levels } from '@/src/levels/levels';
 
 interface CoordinatesStore {
   coordinates: Coordinates;
@@ -15,6 +15,12 @@ interface CoordinatesStore {
   setRotationDegree: (newDegree: number) => void;
   move: (direction: GoDirection) => void;
   rotate: (turnDirection: TurnDirection) => void;
+  level: Level;
+  setLevel: (newLevel: Level) => void;
+  CELL_SIZE: number; // Cell's size
+  BORDER_SIZE: number; // Cell's border size
+  GAP_SIZE: number; // Size between cells
+  BORDER_COLOR: string; // Cell's border color
 }
 
 interface ActionStore {
@@ -50,7 +56,8 @@ const getViewByRotationDegree = (
 const getNewCoordinates = (
   coordinates: Coordinates,
   rotationDegree: number,
-  direction: GoDirection
+  direction: GoDirection,
+  fieldSize: number
 ) => {
   const view = getViewByRotationDegree(rotationDegree);
   // Should move Up
@@ -67,7 +74,7 @@ const getNewCoordinates = (
     (direction === GoDirection.Back && view === PlayerViewDirection.Up)
   ) {
     const newY =
-      coordinates.y + 1 > FIELD_SIZE ? coordinates.y : coordinates.y + 1;
+      coordinates.y + 1 > fieldSize ? coordinates.y : coordinates.y + 1;
     return { ...coordinates, y: newY };
   }
   // Should move Left
@@ -84,10 +91,14 @@ const getNewCoordinates = (
     (direction === GoDirection.Back && view === PlayerViewDirection.Left)
   ) {
     const newX =
-      coordinates.x + 1 > FIELD_SIZE ? coordinates.x : coordinates.x + 1;
+      coordinates.x + 1 > fieldSize ? coordinates.x : coordinates.x + 1;
     return { ...coordinates, x: newX };
   }
   return coordinates;
+};
+
+const isWall = (cell: string) => {
+  return cell === 'wall' ? true : false;
 };
 
 const useCoordinatesStore = create<CoordinatesStore>()(
@@ -99,13 +110,19 @@ const useCoordinatesStore = create<CoordinatesStore>()(
     setRotationDegree: (newDegree) =>
       set(() => ({ rotationDegree: newDegree })),
     move: (direction: GoDirection) => {
-      const { coordinates, rotationDegree } = getState();
+      const { coordinates, rotationDegree, level } = getState();
+      const fieldSize = level.field.length - 1;
       const newCoordinates = getNewCoordinates(
         coordinates,
         rotationDegree,
-        direction
+        direction,
+        fieldSize
       );
-      set(() => ({ coordinates: newCoordinates }));
+      const cell = level.field[newCoordinates.y][newCoordinates.x];
+
+      set(() => ({
+        coordinates: isWall(cell) ? coordinates : newCoordinates,
+      }));
     },
     rotate: (turnDirection: TurnDirection) => {
       set((state) => ({
@@ -115,6 +132,12 @@ const useCoordinatesStore = create<CoordinatesStore>()(
             : state.rotationDegree - 90,
       }));
     },
+    level: levels[0],
+    setLevel: (newLevel) => set(() => ({ level: newLevel })),
+    CELL_SIZE: 50,
+    BORDER_SIZE: 1,
+    GAP_SIZE: 20,
+    BORDER_COLOR: '#bbbbbb',
   }))
 );
 
