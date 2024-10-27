@@ -1,54 +1,65 @@
-"use client";
+'use client';
 
-import useMove, { GoDirections } from "@/src/hooks/useMove";
-import useTurn, { TurnDirection } from "@/src/hooks/useTurn";
-import { useCoordinatesStore } from "@/src/store";
+import { useState } from 'react';
+
+import Button from '@/src/components/Button';
+import { GoDirection } from '@/src/enums/GoDirection';
+import { TurnDirection } from '@/src/enums/TurnDirection';
+import { useCoordinatesStore } from '@/src/store';
 
 const Controls = () => {
-  const move = useMove();
-  const turn = useTurn();
-  const { setCoordinates, setView } = useCoordinatesStore();
-
-  const moveForward = () => {
-    const newCoordinates = move(GoDirections.Forward);
-    setCoordinates(newCoordinates);
-  };
-
-  const moveBack = () => {
-    const newCoordinates = move(GoDirections.Back);
-    setCoordinates(newCoordinates);
-  };
-
-  const turnLeft = () => {
-    const newViewDirection = turn(TurnDirection.Left);
-    setView(newViewDirection);
-  };
-
-  const turnRight = () => {
-    const newViewDirection = turn(TurnDirection.Right);
-    setView(newViewDirection);
-  };
+  const { move, rotate } = useCoordinatesStore();
+  const [showControls, setShowControls] = useState(true);
 
   return (
-    <div className="flex gap-2 content-center justify-center flex-wrap border-2 border-gray-200 w-64 p-5">
+    <>
       <button
-        className="border-2 border-black p-2 w-20 block"
-        onClick={moveForward}
+        onClick={() => {
+          setShowControls((state) => !state);
+        }}
       >
-        Forward
+        {!showControls ? 'Show controls' : 'Hide controls'}
       </button>
-      <div className="flex gap-2">
-        <button className="border-2 border-black p-2  w-14" onClick={turnLeft}>
-          Left
-        </button>
-        <button className="border-2 border-black p-2  w-14" onClick={moveBack}>
-          Back
-        </button>
-        <button className="border-2 border-black p-2  w-14" onClick={turnRight}>
-          Right
-        </button>
-      </div>
-    </div>
+
+      {showControls && (
+        <div className="flex gap-2 content-center justify-center flex-wrap border-2 border-gray-200 w-64 p-5">
+          <Button
+            onClick={() => {
+              move(GoDirection.Forward);
+            }}
+            className="hover:bg-amber-200"
+          >
+            Forward
+          </Button>
+          <div className="flex justify-center gap-2 w-full">
+            <Button
+              onClick={() => {
+                rotate(TurnDirection.Left);
+              }}
+              className="hover:bg-amber-200"
+            >
+              Left
+            </Button>
+            <Button
+              onClick={() => {
+                move(GoDirection.Back);
+              }}
+              className="hover:bg-amber-200"
+            >
+              Back
+            </Button>
+            <Button
+              onClick={() => {
+                rotate(TurnDirection.Right);
+              }}
+              className="hover:bg-amber-200"
+            >
+              Right
+            </Button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

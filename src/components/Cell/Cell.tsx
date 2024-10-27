@@ -1,39 +1,53 @@
-"use client";
+'use client';
 
-import { Coordinates } from "@/src/components/Game/Game";
-import { useDroppable } from "@dnd-kit/core";
-import { PropsWithChildren } from "react";
-import * as _ from "lodash";
-import Image from "next/image";
-import * as icon from "@/public/arrow.png";
-import { useCoordinatesStore } from "@/src/store";
-import getPlayerTransform from "../helpers/getPlayerTransform";
+import { useDroppable } from '@dnd-kit/core';
+import { PropsWithChildren } from 'react';
+
+import { Coordinates } from '@/src/components/Game/Game';
+import { useCoordinatesStore } from '@/src/store';
 
 interface CellProps extends PropsWithChildren {
   selfCoordinates: Coordinates;
-  className?: string;
+  value: string;
 }
 
-const Cell = ({ selfCoordinates, className, children }: CellProps) => {
-  const { setNodeRef } = useDroppable({ id: "cell" });
-  const { coordinates: playerCoordinates, view } = useCoordinatesStore();
-  const isPlayer = _.isEqual(playerCoordinates, selfCoordinates);
+const getCellStyle = (value: string) => {
+  let style = '';
+  switch (value) {
+    case 'wall':
+      style = 'bg-black';
+      break;
+    case 'goal':
+      style = 'bg-green-500';
+      break;
+    case 'lava':
+      style = 'bg-red-500';
+      break;
+    default:
+      style = 'bg-white';
+  }
+
+  return style;
+};
+
+const Cell = ({ selfCoordinates, value, children }: CellProps) => {
+  const { setNodeRef } = useDroppable({ id: 'cell' });
+  const { BORDER_SIZE, CELL_SIZE, BORDER_COLOR } = useCoordinatesStore();
 
   return (
     <div
-      className={className}
+      className={`flex flex-wrap justify-center content-center text-center relative ${getCellStyle(
+        value
+      )}`}
+      style={{
+        width: `${CELL_SIZE}px`,
+        height: `${CELL_SIZE}px`,
+        padding: `${CELL_SIZE / 2}px`,
+        border: `${BORDER_SIZE}px solid ${BORDER_COLOR}`,
+      }}
       ref={setNodeRef}
       title={`x: ${selfCoordinates.x}; y: ${selfCoordinates.y}`}
     >
-      {isPlayer ? (
-        <div className="w-full h-full absolute left-0 top-0">
-          <Image
-            src={icon}
-            alt={"player"}
-            style={{ transform: getPlayerTransform(view) }}
-          />
-        </div>
-      ) : null}
       {children}
     </div>
   );

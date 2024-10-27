@@ -13,6 +13,11 @@ const config: Config = {
         foreground: 'var(--foreground)',
       },
     },
+    borderWidth: {
+      DEFAULT: '0',
+      '1': '1px',
+      '2': '2px',
+    },
   },
   plugins: [],
 };
