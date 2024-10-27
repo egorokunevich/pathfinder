@@ -2,66 +2,29 @@
 
 import { useEffect } from 'react';
 
-import Action from '@/src/components/Action/Action';
+import ActionsToRun from '@/src/components/ActionsToRun';
+import AvailableActions from '@/src/components/AvailableActions';
 import { GoDirection } from '@/src/enums/GoDirection';
 import { useActionStore, useCoordinatesStore } from '@/src/store';
 
 const TaskManager = () => {
   const { move, rotate, level } = useCoordinatesStore();
 
-  const {
-    selectedActions,
-    unselectedActions,
-    toggleSelectedActions,
-    setUnselectedActions,
-  } = useActionStore();
+  const { selectedActions, setUnselectedActions } = useActionStore();
 
   // List of available actions
   const actionDirections = level.actions;
 
   useEffect(() => {
     setUnselectedActions(
-      actionDirections.map((act, i) => {
+      actionDirections.map((action, i) => {
         return {
-          id: act + i,
-          action: act,
+          id: action + i,
+          action,
         };
       })
     );
   }, []);
-
-  // Render available actions
-  const drawUnselectedActions = () => {
-    return unselectedActions.map((action) => {
-      const isSelected = !!selectedActions.find(
-        (item) => item.id === action.id
-      );
-      return (
-        !isSelected && (
-          <Action
-            id={action.id}
-            key={action.id}
-            action={action.action}
-            toggleIsSelected={toggleSelectedActions}
-          />
-        )
-      );
-    });
-  };
-
-  // Render actions that are selected to run
-  const drawSelectedActions = () => {
-    return selectedActions?.map((action) => {
-      return (
-        <Action
-          id={action.id}
-          key={action.id}
-          action={action.action}
-          toggleIsSelected={toggleSelectedActions}
-        />
-      );
-    });
-  };
 
   // TODO: Clear setTimeouts
   const runActions = () => {
@@ -81,21 +44,8 @@ const TaskManager = () => {
 
   return (
     <>
-      <div className="flex gap-5 w-full p-2 relative min-h-20 items-center border-2 border-gray">
-        <span className="absolute left-20 top-0">Actions to Run</span>
-        <button
-          onClick={runActions}
-          className="w-16 h-16 border-2 border-black p-2"
-        >
-          Run
-        </button>
-        <div className="flex gap-2 pt-4">{drawSelectedActions()}</div>
-      </div>
-
-      <div className="flex gap-2 w-full p-2 relative min-h-20 items-center border-2 border-gray">
-        <span className="absolute left-3 top-0">Available Actions</span>
-        <div className="flex gap-2 pt-4">{drawUnselectedActions()}</div>
-      </div>
+      <ActionsToRun onRun={runActions} />
+      <AvailableActions />
     </>
   );
 };

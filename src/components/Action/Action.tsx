@@ -35,17 +35,19 @@ const getIcon = (action: TurnDirection | GoDirection) => {
   }
 
   return (
-    <Image
-      src={icon}
-      alt={action + ' icon'}
-      title={action}
-      width={36}
-      height={36}
-      style={{
-        // Rotate the 'Forward' icon if direction is 'Back'
-        transform: `${action === GoDirection.Back ? 'rotate(180deg)' : ''}`,
-      }}
-    />
+    <div className="flex justify-center items-center w-full">
+      <Image
+        src={icon}
+        alt={action + ' icon'}
+        title={action}
+        width={24}
+        height={24}
+        style={{
+          // Rotate the 'Forward' icon if direction is 'Back'
+          transform: `${action === GoDirection.Back ? 'rotate(180deg)' : ''}`,
+        }}
+      />
+    </div>
   );
 };
 
@@ -58,9 +60,12 @@ const Action = ({ action, id, toggleIsSelected }: ActionProps) => {
     <button
       key={id}
       onClick={handleClick}
-      className="p-1 rounded-full border-2 border-gray w-12 h-12"
+      className="border-1 border-gray-400  hover:border-gray-800 group hover:bg-amber-200 duration-100"
     >
       {getIcon(action)}
+      <div className="border-t-1 border-gray-400 group-hover:border-gray-800 w-full text-xs p-1 duration-100">
+        {action.toUpperCase()}
+      </div>
     </button>
   );
 };

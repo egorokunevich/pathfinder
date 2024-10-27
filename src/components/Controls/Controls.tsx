@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import Button from '@/src/components/Button';
 import { GoDirection } from '@/src/enums/GoDirection';
 import { TurnDirection } from '@/src/enums/TurnDirection';
 import { useCoordinatesStore } from '@/src/store';
@@ -22,39 +23,39 @@ const Controls = () => {
 
       {showControls && (
         <div className="flex gap-2 content-center justify-center flex-wrap border-2 border-gray-200 w-64 p-5">
-          <button
-            className="border-2 border-black p-2 w-20 block"
+          <Button
             onClick={() => {
               move(GoDirection.Forward);
             }}
+            className="hover:bg-amber-200"
           >
             Forward
-          </button>
-          <div className="flex gap-2">
-            <button
-              className="border-2 border-black p-2  w-14"
+          </Button>
+          <div className="flex justify-center gap-2 w-full">
+            <Button
               onClick={() => {
                 rotate(TurnDirection.Left);
               }}
+              className="hover:bg-amber-200"
             >
               Left
-            </button>
-            <button
-              className="border-2 border-black p-2  w-14"
+            </Button>
+            <Button
               onClick={() => {
                 move(GoDirection.Back);
               }}
+              className="hover:bg-amber-200"
             >
               Back
-            </button>
-            <button
-              className="border-2 border-black p-2  w-14"
+            </Button>
+            <Button
               onClick={() => {
                 rotate(TurnDirection.Right);
               }}
+              className="hover:bg-amber-200"
             >
               Right
-            </button>
+            </Button>
           </div>
         </div>
       )}
