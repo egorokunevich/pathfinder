@@ -1,4 +1,4 @@
-import playerIcon from '@/public/icons/arrow.png';
+import playerIcon from '/icons/arrow.png';
 import { useCoordinatesStore } from '@/src/store';
 
 const Player = () => {
