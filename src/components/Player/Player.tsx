@@ -1,8 +1,4 @@
-'use client';
-
-import Image from 'next/image';
-
-import * as icon from '@/public/icons/arrow.png';
+import playerIcon from '@/public/icons/arrow.png';
 import { useCoordinatesStore } from '@/src/store';
 
 const Player = () => {
@@ -24,7 +20,7 @@ const Player = () => {
 
   return (
     <div className="absolute" style={style}>
-      <Image src={icon} alt={'player'} priority={true} />
+      <img src={playerIcon} alt="player" />
     </div>
   );
 };

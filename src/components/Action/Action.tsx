@@ -1,5 +1,3 @@
-import Image from 'next/image';
-
 import forwardIcon from '@/public/icons/forward.png';
 import turnLeftIcon from '@/public/icons/turn-left.png';
 import turnRightIcon from '@/public/icons/turn-right.png';
@@ -36,7 +34,7 @@ const getIcon = (action: TurnDirection | GoDirection) => {
 
   return (
     <div className="flex justify-center items-center w-full">
-      <Image
+      <img
         src={icon}
         alt={action + ' icon'}
         title={action}
