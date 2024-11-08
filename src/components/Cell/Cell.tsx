@@ -37,7 +37,7 @@ const Cell = ({ selfCoordinates, value, children }: CellProps) => {
   return (
     <div
       className={`flex flex-wrap justify-center content-center text-center relative ${getCellStyle(
-        value
+        value,
       )}`}
       style={{
         width: `${CELL_SIZE}px`,
