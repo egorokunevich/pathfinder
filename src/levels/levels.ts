@@ -51,7 +51,7 @@ export const levels: Level[] = [
       [l, w, w, w, g],
     ],
     initialCoordinates: { x: 2, y: 3 },
-    initialViewDirection: PlayerViewDirection.Down,
+    initialViewDirection: PlayerViewDirection.Up,
     actions: [
       GoDirection.Forward,
       GoDirection.Back,

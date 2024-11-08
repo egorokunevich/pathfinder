@@ -53,6 +53,28 @@ const getViewByRotationDegree = (
   }
 };
 
+const getRotationDegreeByView = (view: PlayerViewDirection) => {
+  let degree = 0;
+  switch (view) {
+    case PlayerViewDirection.Up:
+      degree = 0;
+      break;
+    case PlayerViewDirection.Right:
+      degree = 90;
+      break;
+    case PlayerViewDirection.Down:
+      degree = 180;
+      break;
+    case PlayerViewDirection.Left:
+      degree = 270;
+      break;
+    default:
+      degree = 0;
+  }
+
+  return degree;
+};
+
 const getNewCoordinates = (
   coordinates: Coordinates,
   rotationDegree: number,
@@ -97,12 +119,29 @@ const getNewCoordinates = (
   return coordinates;
 };
 
+// This helps to render Player's icon in right place and
+// avoid "jumping" on first render from {x: 0, y: 0} to
+// actual level's initial coordinates.
+//
+// TODO: Save last level id to local storage
+const getInitialCoordinates = (levelId: number) => {
+  return {
+    coordinates: {
+      x: levels[levelId].initialCoordinates.x,
+      y: levels[levelId].initialCoordinates.y,
+    },
+    rotationDegree: getRotationDegreeByView(
+      levels[levelId].initialViewDirection,
+    ),
+  };
+};
+
 const useCoordinatesStore = create<CoordinatesStore>()(
   devtools((set, getState) => ({
-    coordinates: { x: 0, y: 0 },
+    coordinates: getInitialCoordinates(1).coordinates,
     setCoordinates: (newCoordinates) =>
       set(() => ({ coordinates: newCoordinates })),
-    rotationDegree: 0,
+    rotationDegree: getInitialCoordinates(1).rotationDegree,
     setRotationDegree: (newDegree) =>
       set(() => ({ rotationDegree: newDegree })),
     move: (direction: GoDirection) => {
