@@ -19,16 +19,16 @@ Task manager have a bunch of available actions that player will sort in order to
 
 There are some planned features for this project:
 
-- [ ] Level selector
+- [ ] Drag and Drop functionality for Actions.
+- [ ] Level selector.
 - [ ] More levels.
 - [ ] Application styling.
 - [ ] Responsive design.
 - [ ] Settings for field UI (cell-size, gap, borders).
-- [ ] Level editor
+- [ ] Level editor.
 
 ### Technology Stack
 
 I am using `TypeScript`, `React`, `Next.js`, `Tailwind CSS`, `Zustand`.
 
-- I started this project with Next.js. But i might switch to vanilla React, as this project is tends to be SPA.
 - Zustand is used as state manager for player's coordinates, actions and current level data.

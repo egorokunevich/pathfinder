@@ -34,11 +34,11 @@ interface ActionStore {
 }
 
 const getViewByRotationDegree = (
-  rotationDegree: number
+  rotationDegree: number,
 ): PlayerViewDirection => {
   switch (rotationDegree % 360) {
     case 0:
-    case -0:
+      // case -0:
       return PlayerViewDirection.Up;
     case 90:
     case -270:
@@ -58,7 +58,7 @@ const getNewCoordinates = (
   coordinates: Coordinates,
   rotationDegree: number,
   direction: GoDirection,
-  fieldSize: number
+  fieldSize: number,
 ) => {
   const view = getViewByRotationDegree(rotationDegree);
   // Should move Up
@@ -113,7 +113,7 @@ const useCoordinatesStore = create<CoordinatesStore>()(
         coordinates,
         rotationDegree,
         direction,
-        fieldSize
+        fieldSize,
       );
       const cell = level.field[newCoordinates.y][newCoordinates.x];
 
@@ -159,7 +159,7 @@ const useCoordinatesStore = create<CoordinatesStore>()(
     BORDER_SIZE: 1,
     GAP_SIZE: 20,
     BORDER_COLOR: '#bbbbbb',
-  }))
+  })),
 );
 
 const useActionStore = create<ActionStore>()(
@@ -170,28 +170,28 @@ const useActionStore = create<ActionStore>()(
     toggleSelectedActions: (action) =>
       set((state) => {
         const isSelected = !!state.selectedActions.find(
-          (item) => item.id === action.id
+          (item) => item.id === action.id,
         );
 
         if (isSelected) {
           state.unselectedActions.push(action);
           return {
             selectedActions: state.selectedActions.filter(
-              (item) => item.id !== action.id
+              (item) => item.id !== action.id,
             ),
           };
         } else {
           state.selectedActions.push(action);
           return {
             unselectedActions: state.unselectedActions.filter(
-              (item) => item.id !== action.id
+              (item) => item.id !== action.id,
             ),
           };
         }
       }),
     setSelectedActions: (actions) => set({ selectedActions: actions }),
     setUnselectedActions: (actions) => set({ unselectedActions: actions }),
-  }))
+  })),
 );
 
 export { useCoordinatesStore, useActionStore };
