@@ -17,6 +17,7 @@ const TaskManager = () => {
       return {
         id: action + i,
         action,
+        container: 'unselected',
       };
     }),
   );
@@ -24,16 +25,23 @@ const TaskManager = () => {
   const [currentDraggable, setCurrentDraggable] = useState<StoredAction | null>(
     null,
   );
+  const [currentDroppable, setCurrentDroppable] = useState<
+    StoredAction[] | null
+  >(null);
 
+  // Move Action from Unelected to Selected container
   const selectAction = (action: StoredAction) => {
+    // Get index of this action in its current container
     const id = unselectedActions.findIndex((item) => item.id === action.id);
     const unselectedActionsCopy = [...unselectedActions];
     const selectedActionsCopy = [...selectedActions];
+    // Delete action from its container and push into second container
     selectedActionsCopy.push(unselectedActionsCopy.splice(id, 1)[0]);
     setUnselectedActions(unselectedActionsCopy);
     setSelectedActions(selectedActionsCopy);
   };
 
+  // Move Action from Selected to Unselected container
   const unselectAction = (action: StoredAction) => {
     const id = selectedActions.findIndex((item) => item.id === action.id);
     const selectedActionsCopy = [...selectedActions];
@@ -42,6 +50,19 @@ const TaskManager = () => {
     setSelectedActions(selectedActionsCopy);
     setUnselectedActions(unselectedActionsCopy);
   };
+
+  // const moveAction = (
+  //   currentContainer: StoredAction[],
+  //   newContainer: StoredAction[],
+  //   action: StoredAction,
+  // ) => {
+  //   const id = currentContainer.findIndex((item) => item.id === action.id);
+  //   const currentContainerCopy = [...currentContainer];
+  //   const newContainerCopy = [...newContainer];
+  //   newContainerCopy.push(currentContainerCopy.splice(id, 1)[0]);
+  //   setSelectedActions(currentContainerCopy);
+  //   setUnselectedActions(newContainerCopy);
+  // };
 
   // TODO: Clear setTimeouts
   const runActions = () => {
@@ -71,6 +92,8 @@ const TaskManager = () => {
         unselectAction={unselectAction}
         currentDraggable={currentDraggable}
         setCurrentDraggable={setCurrentDraggable}
+        currentDroppable={currentDroppable}
+        setCurrentDroppable={setCurrentDroppable}
       />
       <AvailableActions
         unselectedActions={unselectedActions}
@@ -78,6 +101,8 @@ const TaskManager = () => {
         unselectAction={unselectAction}
         currentDraggable={currentDraggable}
         setCurrentDraggable={setCurrentDraggable}
+        currentDroppable={currentDroppable}
+        setCurrentDroppable={setCurrentDroppable}
       />
     </>
   );

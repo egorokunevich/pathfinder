@@ -20,13 +20,13 @@ const AvailableActions = ({
       <span className="absolute left-3 top-0">Available Actions</span>
       <div
         className="flex gap-2 p-10 w-full"
+        id="unselected"
         onDragOver={(e) => {
           e.preventDefault();
         }}
         onDrop={(e) => {
           e.preventDefault();
-          // console.log(`Drop ${currentDraggable?.id} in unselected`);
-          if (currentDraggable) {
+          if (currentDraggable && currentDraggable.container !== 'unselected') {
             unselectAction(currentDraggable);
           }
         }}
@@ -39,6 +39,7 @@ const AvailableActions = ({
               action={action.action}
               toggleIsSelected={selectAction}
               setCurrentDraggable={setCurrentDraggable}
+              container="unselected"
             />
           );
         })}

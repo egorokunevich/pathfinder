@@ -29,13 +29,13 @@ const ActionsToRun = ({
       </Button>
       <div
         className="flex gap-2 p-10 w-full"
+        id="selected"
         onDragOver={(e) => {
           e.preventDefault();
         }}
         onDrop={(e) => {
           e.preventDefault();
-          // console.log(`Drop ${currentDraggable?.id} in selected`);
-          if (currentDraggable) {
+          if (currentDraggable && currentDraggable.container !== 'selected') {
             selectAction(currentDraggable);
           }
         }}
@@ -48,6 +48,7 @@ const ActionsToRun = ({
               action={action.action}
               toggleIsSelected={unselectAction}
               setCurrentDraggable={setCurrentDraggable}
+              container="selected"
             />
           );
         })}

@@ -50,11 +50,13 @@ const getIcon = (action: TurnDirection | GoDirection) => {
 const Action = ({
   action,
   id,
+  container,
   toggleIsSelected,
   setCurrentDraggable,
 }: ActionProps) => {
   const handleClick = () => {
-    toggleIsSelected({ action, id });
+    const newContainer = container === 'selected' ? 'unselected' : 'selected';
+    toggleIsSelected({ action, id, container: newContainer });
   };
 
   return (
@@ -65,9 +67,16 @@ const Action = ({
       draggable={true}
       onDragStart={() => {
         if (setCurrentDraggable) {
-          setCurrentDraggable({ action, id });
+          setCurrentDraggable({ action, id, container });
         }
       }}
+      // onDragOver={(e) => {
+      //   e.preventDefault();
+      // }}
+      // onDrop={(e) => {
+      //   e.preventDefault();
+      //   console.log(e.target);
+      // }}
     >
       {getIcon(action)}
       <div className="border-t-1 border-gray-400 group-hover:border-gray-800 w-full text-xs p-1 duration-100">
