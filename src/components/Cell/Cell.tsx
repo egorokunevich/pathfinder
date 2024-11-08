@@ -1,8 +1,4 @@
-'use client';
-
-import { useDroppable } from '@dnd-kit/core';
 import { PropsWithChildren } from 'react';
-
 import { Coordinates } from '@/src/components/Game/Game';
 import { useCoordinatesStore } from '@/src/store';
 
@@ -31,8 +27,9 @@ const getCellStyle = (value: string) => {
 };
 
 const Cell = ({ selfCoordinates, value, children }: CellProps) => {
-  const { setNodeRef } = useDroppable({ id: 'cell' });
   const { BORDER_SIZE, CELL_SIZE, BORDER_COLOR } = useCoordinatesStore();
+
+  // TODO: !!! Avoid rerendering the cell on player move
 
   return (
     <div
@@ -45,7 +42,6 @@ const Cell = ({ selfCoordinates, value, children }: CellProps) => {
         padding: `${CELL_SIZE / 2}px`,
         border: `${BORDER_SIZE}px solid ${BORDER_COLOR}`,
       }}
-      ref={setNodeRef}
       title={`x: ${selfCoordinates.x}; y: ${selfCoordinates.y}`}
     >
       {children}

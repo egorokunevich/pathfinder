@@ -1,5 +1,3 @@
-'use client';
-
 import Field from '@/src/components/Field/Field';
 import TaskManager from '@/src/components/TaskManager/TaskManager';
 import Controls from '@/src/components/Controls/Controls';

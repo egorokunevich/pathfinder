@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-import { StoredAction } from '@/src/components/Action/Action';
 import { Coordinates } from '@/src/components/Game/Game';
 import { CellTypes } from '@/src/enums/CellTypes';
 import { GoDirection } from '@/src/enums/GoDirection';
 import { PlayerViewDirection } from '@/src/enums/PlayerViewDirection';
 import { TurnDirection } from '@/src/enums/TurnDirection';
 import { Level, levels } from '@/src/levels/levels';
+import StoredAction from '@/src/types/StoredAction';
 
 interface CoordinatesStore {
   coordinates: Coordinates;
@@ -27,10 +27,9 @@ interface CoordinatesStore {
 interface ActionStore {
   selectedActions: StoredAction[];
   unselectedActions: StoredAction[];
-  currentActions: StoredAction[];
   toggleSelectedActions: (action: StoredAction) => void;
-  setSelectedActions: (action: StoredAction[]) => void;
-  setUnselectedActions: (action: StoredAction[]) => void;
+  setSelectedActions: (actions: StoredAction[]) => void;
+  setUnselectedActions: (actions: StoredAction[]) => void;
 }
 
 const getViewByRotationDegree = (
@@ -129,14 +128,14 @@ const useCoordinatesStore = create<CoordinatesStore>()(
           set(() => ({
             coordinates: newCoordinates,
           }));
-          console.log('win');
+          // console.log('win');
           break;
         case CellTypes.Lava:
           // Losing condition
           set(() => ({
             coordinates: newCoordinates,
           }));
-          console.log('fail');
+          // console.log('fail');
           break;
         default:
           // Player should move
@@ -166,7 +165,6 @@ const useActionStore = create<ActionStore>()(
   devtools((set) => ({
     selectedActions: [],
     unselectedActions: [],
-    currentActions: [],
     toggleSelectedActions: (action) =>
       set((state) => {
         const isSelected = !!state.selectedActions.find(
