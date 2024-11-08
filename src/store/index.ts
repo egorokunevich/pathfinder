@@ -158,9 +158,6 @@ const useCoordinatesStore = create<CoordinatesStore>()(
       switch (cell) {
         case CellTypes.Wall:
           // Player shouldn't move
-          set(() => ({
-            coordinates: coordinates,
-          }));
           break;
         case CellTypes.Goal:
           // Winning condition
