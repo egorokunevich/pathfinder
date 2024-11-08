@@ -2,7 +2,7 @@
 
 import Field from '@/src/components/Field/Field';
 import TaskManager from '@/src/components/TaskManager/TaskManager';
-import Controls from '../Controls/Controls';
+import Controls from '@/src/components/Controls/Controls';
 
 export interface Coordinates {
   x: number;
