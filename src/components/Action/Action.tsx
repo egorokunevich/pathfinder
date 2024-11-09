@@ -53,6 +53,7 @@ const Action = ({
   container,
   toggleIsSelected,
   setCurrentDraggable,
+  onDrop,
 }: ActionProps) => {
   const handleClick = () => {
     const newContainer = container === 'selected' ? 'unselected' : 'selected';
@@ -70,13 +71,15 @@ const Action = ({
           setCurrentDraggable({ action, id, container });
         }
       }}
-      // onDragOver={(e) => {
-      //   e.preventDefault();
-      // }}
-      // onDrop={(e) => {
-      //   e.preventDefault();
-      //   console.log(e.target);
-      // }}
+      onDragOver={(e) => {
+        e.preventDefault();
+      }}
+      onDrop={(e) => {
+        e.preventDefault();
+        if (onDrop) {
+          onDrop(e, { action, id, container });
+        }
+      }}
     >
       {getIcon(action)}
       <div className="border-t-1 border-gray-400 group-hover:border-gray-800 w-full text-xs p-1 duration-100">

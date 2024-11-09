@@ -25,9 +25,6 @@ const TaskManager = () => {
   const [currentDraggable, setCurrentDraggable] = useState<StoredAction | null>(
     null,
   );
-  const [currentDroppable, setCurrentDroppable] = useState<
-    StoredAction[] | null
-  >(null);
 
   // Move Action from Unelected to Selected container
   const selectAction = (action: StoredAction) => {
@@ -88,21 +85,19 @@ const TaskManager = () => {
       <ActionsToRun
         onRun={runActions}
         selectedActions={selectedActions}
+        setSelectedActions={setSelectedActions}
         selectAction={selectAction}
         unselectAction={unselectAction}
         currentDraggable={currentDraggable}
         setCurrentDraggable={setCurrentDraggable}
-        currentDroppable={currentDroppable}
-        setCurrentDroppable={setCurrentDroppable}
       />
       <AvailableActions
         unselectedActions={unselectedActions}
+        setUnselectedActions={setUnselectedActions}
         selectAction={selectAction}
         unselectAction={unselectAction}
         currentDraggable={currentDraggable}
         setCurrentDraggable={setCurrentDraggable}
-        currentDroppable={currentDroppable}
-        setCurrentDroppable={setCurrentDroppable}
       />
     </>
   );

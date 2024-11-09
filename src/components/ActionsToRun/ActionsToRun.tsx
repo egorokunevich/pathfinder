@@ -1,11 +1,13 @@
 import Action from '@/src/components/Action/Action';
 import Button from '@/src/components/Button';
+import useOnItemDrop from '@/src/helpers/useOnItemDrop';
 import DragAndDrop from '@/src/types/DragAndDrop';
 import StoredAction from '@/src/types/StoredAction';
 
 interface ActionsToRunProps extends DragAndDrop {
   onRun: () => void;
   selectedActions: StoredAction[];
+  setSelectedActions: (actions: StoredAction[]) => void;
   selectAction: (action: StoredAction) => void;
   unselectAction: (action: StoredAction) => void;
 }
@@ -13,11 +15,18 @@ interface ActionsToRunProps extends DragAndDrop {
 const ActionsToRun = ({
   onRun,
   selectedActions,
+  setSelectedActions,
   selectAction,
   unselectAction,
   currentDraggable,
   setCurrentDraggable,
 }: ActionsToRunProps) => {
+  const { onItemDrop } = useOnItemDrop({
+    actionsList: selectedActions,
+    currentDraggable,
+    setActionsList: setSelectedActions,
+  });
+
   return (
     <div className="flex gap-5 w-full p-2 relative min-h-20 items-center border-2 border-gray">
       <span className="absolute left-20 top-0">Actions to Run</span>
@@ -49,6 +58,7 @@ const ActionsToRun = ({
               toggleIsSelected={unselectAction}
               setCurrentDraggable={setCurrentDraggable}
               container="selected"
+              onDrop={onItemDrop}
             />
           );
         })}

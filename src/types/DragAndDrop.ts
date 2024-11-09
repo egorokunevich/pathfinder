@@ -8,8 +8,6 @@ interface DragAndDrop {
   onDrop?: (e: React.DragEvent<HTMLElement>, action: StoredAction) => void;
   currentDraggable?: StoredAction | null;
   setCurrentDraggable?: (action: StoredAction) => void;
-  currentDroppable?: StoredAction[] | null;
-  setCurrentDroppable?: (action: StoredAction[]) => void;
 }
 
 export default DragAndDrop;
