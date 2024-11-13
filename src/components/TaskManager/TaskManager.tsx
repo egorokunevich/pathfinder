@@ -1,30 +1,43 @@
 import ActionsToRun from '@/src/components/ActionsToRun';
 import AvailableActions from '@/src/components/AvailableActions';
 import { GoDirection } from '@/src/enums/GoDirection';
+import useDragAndDrop from '@/src/hooks/useDragAndDrop';
 import { useCoordinatesStore } from '@/src/store';
 import StoredAction from '@/src/types/StoredAction';
-import { useState } from 'react';
 
 const TaskManager = () => {
-  const { move, rotate, level } = useCoordinatesStore();
+  const {
+    move,
+    rotate,
+    // , level
+  } = useCoordinatesStore();
+
+  const {
+    currentDraggable,
+    setCurrentDraggable,
+    selectedActions,
+    setSelectedActions,
+    unselectedActions,
+    setUnselectedActions,
+  } = useDragAndDrop();
 
   // List of available actions
-  const actionDirections = level.actions;
+  // const actionDirections = level.actions;
 
-  const [selectedActions, setSelectedActions] = useState<StoredAction[]>([]);
-  const [unselectedActions, setUnselectedActions] = useState<StoredAction[]>(
-    actionDirections.map((action, i) => {
-      return {
-        id: action + i,
-        action,
-        container: 'unselected',
-      };
-    }),
-  );
+  // const [selectedActions, setSelectedActions] = useState<StoredAction[]>([]);
+  // const [unselectedActions, setUnselectedActions] = useState<StoredAction[]>(
+  //   actionDirections.map((action, i) => {
+  //     return {
+  //       id: action + i,
+  //       action,
+  //       container: 'unselected',
+  //     };
+  //   }),
+  // );
 
-  const [currentDraggable, setCurrentDraggable] = useState<StoredAction | null>(
-    null,
-  );
+  // const [currentDraggable, setCurrentDraggable] = useState<StoredAction | null>(
+  //   null,
+  // );
 
   // Move Action from Unelected to Selected container
   const selectAction = (action: StoredAction) => {
@@ -86,6 +99,8 @@ const TaskManager = () => {
         onRun={runActions}
         selectedActions={selectedActions}
         setSelectedActions={setSelectedActions}
+        unselectedActions={unselectedActions}
+        setUnselectedActions={setUnselectedActions}
         selectAction={selectAction}
         unselectAction={unselectAction}
         currentDraggable={currentDraggable}
@@ -94,6 +109,8 @@ const TaskManager = () => {
       <AvailableActions
         unselectedActions={unselectedActions}
         setUnselectedActions={setUnselectedActions}
+        selectedActions={selectedActions}
+        setSelectedActions={setSelectedActions}
         selectAction={selectAction}
         unselectAction={unselectAction}
         currentDraggable={currentDraggable}

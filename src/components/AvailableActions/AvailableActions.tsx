@@ -1,11 +1,13 @@
 import Action from '@/src/components/Action/Action';
-import useOnItemDrop from '@/src/helpers/useOnItemDrop';
+import useOnItemDrop from '@/src/hooks/useOnItemDrop';
 import DragAndDrop from '@/src/types/DragAndDrop';
 import StoredAction from '@/src/types/StoredAction';
 
 interface AvailableActionsProps extends DragAndDrop {
   unselectedActions: StoredAction[];
   setUnselectedActions: (actions: StoredAction[]) => void;
+  selectedActions: StoredAction[];
+  setSelectedActions: (actions: StoredAction[]) => void;
   selectAction: (action: StoredAction) => void;
   unselectAction: (action: StoredAction) => void;
 }
@@ -13,15 +15,19 @@ interface AvailableActionsProps extends DragAndDrop {
 const AvailableActions = ({
   unselectedActions,
   setUnselectedActions,
+  selectedActions,
+  setSelectedActions,
   selectAction,
   unselectAction,
   currentDraggable,
   setCurrentDraggable,
 }: AvailableActionsProps) => {
   const { onItemDrop } = useOnItemDrop({
-    actionsList: unselectedActions,
+    dropList: unselectedActions,
+    setDropList: setUnselectedActions,
+    fromList: selectedActions,
+    setFromList: setSelectedActions,
     currentDraggable,
-    setActionsList: setUnselectedActions,
   });
   return (
     <div className="flex gap-2 w-full p-2 relative min-h-20 items-center border-2 border-gray">
@@ -34,7 +40,13 @@ const AvailableActions = ({
         }}
         onDrop={(e) => {
           e.preventDefault();
-          if (currentDraggable && currentDraggable.container !== 'unselected') {
+          if (
+            currentDraggable &&
+            // Check that action is from another container.
+            currentDraggable.container !== 'unselected' &&
+            // Check that we drop on container itself and not on action element.
+            e.target === e.currentTarget
+          ) {
             unselectAction(currentDraggable);
           }
         }}

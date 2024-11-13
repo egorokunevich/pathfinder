@@ -5,11 +5,13 @@ import turnRightIcon from '/icons/turn-right.png';
 import { GoDirection } from '@/src/enums/GoDirection';
 import { TurnDirection } from '@/src/enums/TurnDirection';
 import DragAndDrop from '@/src/types/DragAndDrop';
+import { motion } from 'framer-motion';
 
 interface ActionProps extends StoredAction, DragAndDrop {
   toggleIsSelected: (action: StoredAction) => void;
 }
 
+// There several icons for different actions. This function returns the proper one.
 const getIcon = (action: TurnDirection | GoDirection) => {
   let icon;
 
@@ -61,7 +63,12 @@ const Action = ({
   };
 
   return (
-    <button
+    <motion.button
+      // TO FIX: This animation causes warnings in console.
+      whileHover={{
+        transform: 'translateY(-5px)',
+      }}
+      style={{ transform: 'translateY(0)' }}
       key={id}
       onClick={handleClick}
       className="border-1 border-gray-400  hover:border-gray-800 group hover:bg-amber-200 duration-100 cursor-grab"
@@ -85,7 +92,7 @@ const Action = ({
       <div className="border-t-1 border-gray-400 group-hover:border-gray-800 w-full text-xs p-1 duration-100">
         {action.toUpperCase()}
       </div>
-    </button>
+    </motion.button>
   );
 };
 

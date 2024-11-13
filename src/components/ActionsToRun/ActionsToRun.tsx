@@ -1,6 +1,6 @@
 import Action from '@/src/components/Action/Action';
 import Button from '@/src/components/Button';
-import useOnItemDrop from '@/src/helpers/useOnItemDrop';
+import useOnItemDrop from '@/src/hooks/useOnItemDrop';
 import DragAndDrop from '@/src/types/DragAndDrop';
 import StoredAction from '@/src/types/StoredAction';
 
@@ -8,6 +8,8 @@ interface ActionsToRunProps extends DragAndDrop {
   onRun: () => void;
   selectedActions: StoredAction[];
   setSelectedActions: (actions: StoredAction[]) => void;
+  unselectedActions: StoredAction[];
+  setUnselectedActions: (actions: StoredAction[]) => void;
   selectAction: (action: StoredAction) => void;
   unselectAction: (action: StoredAction) => void;
 }
@@ -16,15 +18,19 @@ const ActionsToRun = ({
   onRun,
   selectedActions,
   setSelectedActions,
+  unselectedActions,
+  setUnselectedActions,
   selectAction,
   unselectAction,
   currentDraggable,
   setCurrentDraggable,
 }: ActionsToRunProps) => {
   const { onItemDrop } = useOnItemDrop({
-    actionsList: selectedActions,
+    dropList: selectedActions,
+    setDropList: setSelectedActions,
+    fromList: unselectedActions,
+    setFromList: setUnselectedActions,
     currentDraggable,
-    setActionsList: setSelectedActions,
   });
 
   return (
@@ -44,7 +50,13 @@ const ActionsToRun = ({
         }}
         onDrop={(e) => {
           e.preventDefault();
-          if (currentDraggable && currentDraggable.container !== 'selected') {
+          if (
+            currentDraggable &&
+            // Check that action is from another container.
+            currentDraggable.container !== 'selected' &&
+            // Check that we drop on container itself and not on action element.
+            e.target === e.currentTarget
+          ) {
             selectAction(currentDraggable);
           }
         }}
