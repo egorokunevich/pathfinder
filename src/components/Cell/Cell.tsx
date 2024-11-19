@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { Coordinates } from '@/src/components/Game/Game';
-import { useCoordinatesStore } from '@/src/store';
+import { useSettingsStore } from '@/src/store';
 
 interface CellProps extends PropsWithChildren {
   selfCoordinates: Coordinates;
@@ -27,7 +27,7 @@ const getCellStyle = (value: string) => {
 };
 
 const Cell = ({ selfCoordinates, value, children }: CellProps) => {
-  const { BORDER_SIZE, CELL_SIZE, BORDER_COLOR } = useCoordinatesStore();
+  const { BORDER_SIZE, CELL_SIZE, BORDER_COLOR } = useSettingsStore();
 
   // TODO: !!! Avoid rerendering the cell on player move
 

@@ -14,14 +14,21 @@ interface CoordinatesStore {
   setCoordinates: (newCoordinates: Coordinates) => void;
   rotationDegree: number;
   setRotationDegree: (newDegree: number) => void;
-  move: (direction: GoDirection) => void;
-  rotate: (turnDirection: TurnDirection) => void;
   level: Level;
   setLevel: (newLevel: Level) => void;
+  move: (direction: GoDirection) => void;
+  rotate: (turnDirection: TurnDirection) => void;
+}
+
+interface SettingsStore {
   CELL_SIZE: number; // Cell's size
   BORDER_SIZE: number; // Cell's border size
-  GAP_SIZE: number; // Size between cells
   BORDER_COLOR: string; // Cell's border color
+  GAP_SIZE: number; // Size between cells
+  setCellSize: (newCellSize: number) => void;
+  setBorderSize: (newBorderSize: number) => void;
+  setBorderColor: (newBorderColor: string) => void;
+  setGapSize: (newGapSize: number) => void;
 }
 
 interface ActionStore {
@@ -144,6 +151,8 @@ const useCoordinatesStore = create<CoordinatesStore>()(
     rotationDegree: getInitialCoordinates(1).rotationDegree,
     setRotationDegree: (newDegree) =>
       set(() => ({ rotationDegree: newDegree })),
+    level: levels[1],
+    setLevel: (newLevel) => set(() => ({ level: newLevel })),
     move: (direction: GoDirection) => {
       const { coordinates, rotationDegree, level } = getState();
       const fieldSize = level.field.length - 1;
@@ -188,12 +197,6 @@ const useCoordinatesStore = create<CoordinatesStore>()(
             : state.rotationDegree - 90,
       }));
     },
-    level: levels[1],
-    setLevel: (newLevel) => set(() => ({ level: newLevel })),
-    CELL_SIZE: 50,
-    BORDER_SIZE: 1,
-    GAP_SIZE: 20,
-    BORDER_COLOR: '#bbbbbb',
   })),
 );
 
@@ -228,4 +231,20 @@ const useActionStore = create<ActionStore>()(
   })),
 );
 
-export { useCoordinatesStore, useActionStore };
+// Will be used to modify settings by user.
+const useSettingsStore = create<SettingsStore>()(
+  devtools((set) => ({
+    CELL_SIZE: 50,
+    BORDER_SIZE: 1,
+    BORDER_COLOR: '#bbbbbb',
+    GAP_SIZE: 20,
+    setCellSize: (newCellSize) => set(() => ({ CELL_SIZE: newCellSize })),
+    setBorderSize: (newBorderSize) =>
+      set(() => ({ BORDER_SIZE: newBorderSize })),
+    setBorderColor: (newBorderColor) =>
+      set(() => ({ BORDER_COLOR: newBorderColor })),
+    setGapSize: (newGapSize) => set(() => ({ GAP_SIZE: newGapSize })),
+  })),
+);
+
+export { useCoordinatesStore, useActionStore, useSettingsStore };
