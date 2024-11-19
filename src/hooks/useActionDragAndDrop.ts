@@ -5,7 +5,7 @@ import { useState } from 'react';
 const useActionDragAndDrop = () => {
   const { level } = useCoordinatesStore();
 
-  // List of available actions
+  // List of available actions for current level.
   const actionDirections = level.actions;
 
   const [selectedActions, setSelectedActions] = useState<StoredAction[]>([]);
@@ -66,8 +66,10 @@ const useActionDragAndDrop = () => {
         ? setSelectedActions
         : setUnselectedActions;
 
+    // Index of action, that we drop on.
     const dropIndex = dropList.findIndex((item) => item.id === action.id)!;
 
+    // Drop in the same container.
     if (currentDraggable.container === action.container) {
       const updatedList = dropList
         .filter((item) => item.id !== currentDraggable.id)

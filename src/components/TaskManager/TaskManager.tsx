@@ -5,11 +5,9 @@ import useActionDragAndDrop from '@/src/hooks/useActionDragAndDrop';
 import { useCoordinatesStore } from '@/src/store';
 
 const TaskManager = () => {
-  const {
-    move,
-    rotate,
-    // , level
-  } = useCoordinatesStore();
+  const { move, rotate } = useCoordinatesStore();
+
+  const ACTION_DELAY = 250; // Time of delay between actions in milliseconds.
 
   const {
     selectedActions,
@@ -20,22 +18,18 @@ const TaskManager = () => {
     handleActionDragStart,
   } = useActionDragAndDrop();
 
-  // TODO: Clear setTimeouts
   const runActions = () => {
     selectedActions.forEach((item, id) => {
-      setTimeout(
-        () => {
-          if (
-            item.action === GoDirection.Forward ||
-            item.action === GoDirection.Back
-          ) {
-            move(item.action);
-          } else {
-            rotate(item.action);
-          }
-        },
-        (id + 1) * 250,
-      );
+      setTimeout(() => {
+        if (
+          item.action === GoDirection.Forward ||
+          item.action === GoDirection.Back
+        ) {
+          move(item.action);
+        } else {
+          rotate(item.action);
+        }
+      }, ++id * ACTION_DELAY);
     });
   };
 
