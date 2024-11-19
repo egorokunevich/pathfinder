@@ -2,12 +2,12 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 import { Coordinates } from '@/src/components/Game/Game';
-import { CellTypes } from '@/src/enums/CellTypes';
 import { GoDirection } from '@/src/enums/GoDirection';
 import { PlayerViewDirection } from '@/src/enums/PlayerViewDirection';
 import { TurnDirection } from '@/src/enums/TurnDirection';
 import { Level, levels } from '@/src/levels/levels';
 import StoredAction from '@/src/types/StoredAction';
+import getMoveData from '@/src/helpers/getMoveData';
 
 interface CoordinatesStore {
   coordinates: Coordinates;
@@ -39,27 +39,6 @@ interface ActionStore {
   setUnselectedActions: (actions: StoredAction[]) => void;
 }
 
-const getViewByRotationDegree = (
-  rotationDegree: number,
-): PlayerViewDirection => {
-  switch (rotationDegree % 360) {
-    case 0:
-      // case -0:
-      return PlayerViewDirection.Up;
-    case 90:
-    case -270:
-      return PlayerViewDirection.Right;
-    case 180:
-    case -180:
-      return PlayerViewDirection.Down;
-    case 270:
-    case -90:
-      return PlayerViewDirection.Left;
-    default:
-      return null as never;
-  }
-};
-
 const getRotationDegreeByView = (view: PlayerViewDirection) => {
   let degree = 0;
   switch (view) {
@@ -80,50 +59,6 @@ const getRotationDegreeByView = (view: PlayerViewDirection) => {
   }
 
   return degree;
-};
-
-const getNewCoordinates = (
-  coordinates: Coordinates,
-  rotationDegree: number,
-  direction: GoDirection,
-  fieldSize: number,
-) => {
-  const view = getViewByRotationDegree(rotationDegree);
-  // Should move Up
-  if (
-    (direction === GoDirection.Forward && view === PlayerViewDirection.Up) ||
-    (direction === GoDirection.Back && view === PlayerViewDirection.Down)
-  ) {
-    const newY = coordinates.y - 1 < 0 ? coordinates.y : coordinates.y - 1;
-    return { ...coordinates, y: newY };
-  }
-  // Should move Down
-  if (
-    (direction === GoDirection.Forward && view === PlayerViewDirection.Down) ||
-    (direction === GoDirection.Back && view === PlayerViewDirection.Up)
-  ) {
-    const newY =
-      coordinates.y + 1 > fieldSize ? coordinates.y : coordinates.y + 1;
-    return { ...coordinates, y: newY };
-  }
-  // Should move Left
-  if (
-    (direction === GoDirection.Forward && view === PlayerViewDirection.Left) ||
-    (direction === GoDirection.Back && view === PlayerViewDirection.Right)
-  ) {
-    const newX = coordinates.x - 1 < 0 ? coordinates.x : coordinates.x - 1;
-    return { ...coordinates, x: newX };
-  }
-  // Should move Right
-  if (
-    (direction === GoDirection.Forward && view === PlayerViewDirection.Right) ||
-    (direction === GoDirection.Back && view === PlayerViewDirection.Left)
-  ) {
-    const newX =
-      coordinates.x + 1 > fieldSize ? coordinates.x : coordinates.x + 1;
-    return { ...coordinates, x: newX };
-  }
-  return coordinates;
 };
 
 // This helps to render Player's icon in right place and
@@ -155,38 +90,18 @@ const useCoordinatesStore = create<CoordinatesStore>()(
     setLevel: (newLevel) => set(() => ({ level: newLevel })),
     move: (direction: GoDirection) => {
       const { coordinates, rotationDegree, level } = getState();
-      const fieldSize = level.field.length - 1;
-      const newCoordinates = getNewCoordinates(
+
+      const moveData = getMoveData({
+        direction,
         coordinates,
         rotationDegree,
-        direction,
-        fieldSize,
-      );
-      const cell = level.field[newCoordinates.y][newCoordinates.x];
+        level,
+      });
 
-      switch (cell) {
-        case CellTypes.Wall:
-          // Player shouldn't move
-          break;
-        case CellTypes.Goal:
-          // Winning condition
-          set(() => ({
-            coordinates: newCoordinates,
-          }));
-          // console.log('win');
-          break;
-        case CellTypes.Lava:
-          // Losing condition
-          set(() => ({
-            coordinates: newCoordinates,
-          }));
-          // console.log('fail');
-          break;
-        default:
-          // Player should move
-          set(() => ({
-            coordinates: newCoordinates,
-          }));
+      if (moveData.shouldMove) {
+        set(() => ({
+          coordinates: moveData.newCoordinates,
+        }));
       }
     },
     rotate: (turnDirection: TurnDirection) => {
