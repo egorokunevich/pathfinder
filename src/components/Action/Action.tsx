@@ -87,7 +87,7 @@ const Action = ({
     >
       {getIcon(action)}
       <div className="border-t-1 border-gray-400 group-hover:border-gray-800 w-full text-xs p-1 duration-100">
-        {actionData.id}
+        {actionData.action.toUpperCase()}
       </div>
     </motion.button>
   );
