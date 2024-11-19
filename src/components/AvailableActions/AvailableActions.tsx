@@ -1,66 +1,49 @@
 import Action from '@/src/components/Action/Action';
-import useOnItemDrop from '@/src/hooks/useOnItemDrop';
-import DragAndDrop from '@/src/types/DragAndDrop';
 import StoredAction from '@/src/types/StoredAction';
 
-interface AvailableActionsProps extends DragAndDrop {
-  unselectedActions: StoredAction[];
-  setUnselectedActions: (actions: StoredAction[]) => void;
-  selectedActions: StoredAction[];
-  setSelectedActions: (actions: StoredAction[]) => void;
-  selectAction: (action: StoredAction) => void;
-  unselectAction: (action: StoredAction) => void;
+interface AvailableActionsProps {
+  actions: StoredAction[];
+  handleActionClick: (action: StoredAction) => void;
+  handleActionDrop: (action: StoredAction) => void;
+  handleActionDragStart: (action: StoredAction) => void;
+  handleContainerDrop: (from: StoredAction['container']) => void;
 }
 
 const AvailableActions = ({
-  unselectedActions,
-  setUnselectedActions,
-  selectedActions,
-  setSelectedActions,
-  selectAction,
-  unselectAction,
-  currentDraggable,
-  setCurrentDraggable,
+  actions,
+  handleActionClick,
+  handleActionDragStart,
+  handleActionDrop,
+  handleContainerDrop,
 }: AvailableActionsProps) => {
-  const { onItemDrop } = useOnItemDrop({
-    dropList: unselectedActions,
-    setDropList: setUnselectedActions,
-    fromList: selectedActions,
-    setFromList: setSelectedActions,
-    currentDraggable,
-  });
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    if (event.target === event.currentTarget) {
+      handleContainerDrop('unselected');
+    }
+  };
+
   return (
     <div className="flex gap-2 w-full p-2 relative min-h-20 items-center border-2 border-gray">
       <span className="absolute left-3 top-0">Available Actions</span>
       <div
         className="flex gap-2 p-10 w-full"
         id="unselected"
-        onDragOver={(e) => {
-          e.preventDefault();
-        }}
-        onDrop={(e) => {
-          e.preventDefault();
-          if (
-            currentDraggable &&
-            // Check that action is from another container.
-            currentDraggable.container !== 'unselected' &&
-            // Check that we drop on container itself and not on action element.
-            e.target === e.currentTarget
-          ) {
-            unselectAction(currentDraggable);
-          }
-        }}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
       >
-        {unselectedActions.map((action) => {
+        {actions.map((actionData) => {
           return (
             <Action
-              id={action.id}
-              key={action.id}
-              action={action.action}
-              toggleIsSelected={selectAction}
-              setCurrentDraggable={setCurrentDraggable}
-              container="unselected"
-              onDrop={onItemDrop}
+              key={actionData.id}
+              actionData={actionData}
+              handleActionClick={handleActionClick}
+              handleActionDragStart={handleActionDragStart}
+              handleActionDrop={handleActionDrop}
             />
           );
         })}

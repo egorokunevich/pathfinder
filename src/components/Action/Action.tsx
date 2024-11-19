@@ -4,14 +4,16 @@ import turnLeftIcon from '/icons/turn-left.png';
 import turnRightIcon from '/icons/turn-right.png';
 import { GoDirection } from '@/src/enums/GoDirection';
 import { TurnDirection } from '@/src/enums/TurnDirection';
-import DragAndDrop from '@/src/types/DragAndDrop';
 import { motion } from 'framer-motion';
 
-interface ActionProps extends StoredAction, DragAndDrop {
-  toggleIsSelected: (action: StoredAction) => void;
+interface ActionProps {
+  actionData: StoredAction;
+  handleActionClick: (action: StoredAction) => void;
+  handleActionDragStart: (action: StoredAction) => void;
+  handleActionDrop: (action: StoredAction) => void;
 }
 
-// There several icons for different actions. This function returns the proper one.
+// There are several icons for different actions. This function returns the proper one.
 const getIcon = (action: TurnDirection | GoDirection) => {
   let icon;
 
@@ -50,47 +52,42 @@ const getIcon = (action: TurnDirection | GoDirection) => {
 };
 
 const Action = ({
-  action,
-  id,
-  container,
-  toggleIsSelected,
-  setCurrentDraggable,
-  onDrop,
+  actionData,
+  handleActionClick,
+  handleActionDragStart,
+  handleActionDrop,
 }: ActionProps) => {
+  const { action } = actionData;
+
+  const handleDragStart = () => {
+    handleActionDragStart(actionData);
+  };
+
   const handleClick = () => {
-    const newContainer = container === 'selected' ? 'unselected' : 'selected';
-    toggleIsSelected({ action, id, container: newContainer });
+    handleActionClick(actionData);
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    handleActionDrop(actionData);
   };
 
   return (
     <motion.button
-      // TO FIX: This animation causes warnings in console.
-      whileHover={{
-        transform: 'translateY(-5px)',
-      }}
-      style={{ transform: 'translateY(0)' }}
-      key={id}
       onClick={handleClick}
       className="border-1 border-gray-400  hover:border-gray-800 group hover:bg-amber-200 duration-100 cursor-grab"
       draggable={true}
-      onDragStart={() => {
-        if (setCurrentDraggable) {
-          setCurrentDraggable({ action, id, container });
-        }
-      }}
-      onDragOver={(e) => {
-        e.preventDefault();
-      }}
-      onDrop={(e) => {
-        e.preventDefault();
-        if (onDrop) {
-          onDrop(e, { action, id, container });
-        }
-      }}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
     >
       {getIcon(action)}
       <div className="border-t-1 border-gray-400 group-hover:border-gray-800 w-full text-xs p-1 duration-100">
-        {action.toUpperCase()}
+        {actionData.id}
       </div>
     </motion.button>
   );
