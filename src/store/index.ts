@@ -1,148 +1,107 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-import { StoredAction } from '@/src/components/Action/Action';
 import { Coordinates } from '@/src/components/Game/Game';
-import { CellTypes } from '@/src/enums/CellTypes';
 import { GoDirection } from '@/src/enums/GoDirection';
 import { PlayerViewDirection } from '@/src/enums/PlayerViewDirection';
 import { TurnDirection } from '@/src/enums/TurnDirection';
 import { Level, levels } from '@/src/levels/levels';
+import StoredAction from '@/src/types/StoredAction';
+import getMoveData from '@/src/helpers/getMoveData';
 
 interface CoordinatesStore {
   coordinates: Coordinates;
   setCoordinates: (newCoordinates: Coordinates) => void;
   rotationDegree: number;
   setRotationDegree: (newDegree: number) => void;
-  move: (direction: GoDirection) => void;
-  rotate: (turnDirection: TurnDirection) => void;
   level: Level;
   setLevel: (newLevel: Level) => void;
+  move: (direction: GoDirection) => void;
+  rotate: (turnDirection: TurnDirection) => void;
+}
+
+interface SettingsStore {
   CELL_SIZE: number; // Cell's size
   BORDER_SIZE: number; // Cell's border size
-  GAP_SIZE: number; // Size between cells
   BORDER_COLOR: string; // Cell's border color
+  GAP_SIZE: number; // Size between cells
+  setCellSize: (newCellSize: number) => void;
+  setBorderSize: (newBorderSize: number) => void;
+  setBorderColor: (newBorderColor: string) => void;
+  setGapSize: (newGapSize: number) => void;
 }
 
 interface ActionStore {
   selectedActions: StoredAction[];
   unselectedActions: StoredAction[];
-  currentActions: StoredAction[];
   toggleSelectedActions: (action: StoredAction) => void;
-  setSelectedActions: (action: StoredAction[]) => void;
-  setUnselectedActions: (action: StoredAction[]) => void;
+  setSelectedActions: (actions: StoredAction[]) => void;
+  setUnselectedActions: (actions: StoredAction[]) => void;
 }
 
-const getViewByRotationDegree = (
-  rotationDegree: number,
-): PlayerViewDirection => {
-  switch (rotationDegree % 360) {
-    case 0:
-      // case -0:
-      return PlayerViewDirection.Up;
-    case 90:
-    case -270:
-      return PlayerViewDirection.Right;
-    case 180:
-    case -180:
-      return PlayerViewDirection.Down;
-    case 270:
-    case -90:
-      return PlayerViewDirection.Left;
+const getRotationDegreeByView = (view: PlayerViewDirection) => {
+  let degree = 0;
+  switch (view) {
+    case PlayerViewDirection.Up:
+      degree = 0;
+      break;
+    case PlayerViewDirection.Right:
+      degree = 90;
+      break;
+    case PlayerViewDirection.Down:
+      degree = 180;
+      break;
+    case PlayerViewDirection.Left:
+      degree = 270;
+      break;
     default:
-      return null as never;
+      degree = 0;
   }
+
+  return degree;
 };
 
-const getNewCoordinates = (
-  coordinates: Coordinates,
-  rotationDegree: number,
-  direction: GoDirection,
-  fieldSize: number,
-) => {
-  const view = getViewByRotationDegree(rotationDegree);
-  // Should move Up
-  if (
-    (direction === GoDirection.Forward && view === PlayerViewDirection.Up) ||
-    (direction === GoDirection.Back && view === PlayerViewDirection.Down)
-  ) {
-    const newY = coordinates.y - 1 < 0 ? coordinates.y : coordinates.y - 1;
-    return { ...coordinates, y: newY };
-  }
-  // Should move Down
-  if (
-    (direction === GoDirection.Forward && view === PlayerViewDirection.Down) ||
-    (direction === GoDirection.Back && view === PlayerViewDirection.Up)
-  ) {
-    const newY =
-      coordinates.y + 1 > fieldSize ? coordinates.y : coordinates.y + 1;
-    return { ...coordinates, y: newY };
-  }
-  // Should move Left
-  if (
-    (direction === GoDirection.Forward && view === PlayerViewDirection.Left) ||
-    (direction === GoDirection.Back && view === PlayerViewDirection.Right)
-  ) {
-    const newX = coordinates.x - 1 < 0 ? coordinates.x : coordinates.x - 1;
-    return { ...coordinates, x: newX };
-  }
-  // Should move Right
-  if (
-    (direction === GoDirection.Forward && view === PlayerViewDirection.Right) ||
-    (direction === GoDirection.Back && view === PlayerViewDirection.Left)
-  ) {
-    const newX =
-      coordinates.x + 1 > fieldSize ? coordinates.x : coordinates.x + 1;
-    return { ...coordinates, x: newX };
-  }
-  return coordinates;
+// This helps to render Player's icon in right place and
+// avoid "jumping" on first render from {x: 0, y: 0} to
+// actual level's initial coordinates.
+//
+// TODO: Save last level id to local storage
+const getInitialCoordinates = (levelId: number) => {
+  return {
+    coordinates: {
+      x: levels[levelId].initialCoordinates.x,
+      y: levels[levelId].initialCoordinates.y,
+    },
+    rotationDegree: getRotationDegreeByView(
+      levels[levelId].initialViewDirection,
+    ),
+  };
 };
 
 const useCoordinatesStore = create<CoordinatesStore>()(
   devtools((set, getState) => ({
-    coordinates: { x: 0, y: 0 },
+    coordinates: getInitialCoordinates(1).coordinates,
     setCoordinates: (newCoordinates) =>
       set(() => ({ coordinates: newCoordinates })),
-    rotationDegree: 0,
+    rotationDegree: getInitialCoordinates(1).rotationDegree,
     setRotationDegree: (newDegree) =>
       set(() => ({ rotationDegree: newDegree })),
+    level: levels[1],
+    setLevel: (newLevel) => set(() => ({ level: newLevel })),
     move: (direction: GoDirection) => {
       const { coordinates, rotationDegree, level } = getState();
-      const fieldSize = level.field.length - 1;
-      const newCoordinates = getNewCoordinates(
+
+      const moveData = getMoveData({
+        direction,
         coordinates,
         rotationDegree,
-        direction,
-        fieldSize,
-      );
-      const cell = level.field[newCoordinates.y][newCoordinates.x];
+        level,
+      });
 
-      switch (cell) {
-        case CellTypes.Wall:
-          // Player shouldn't move
-          set(() => ({
-            coordinates: coordinates,
-          }));
-          break;
-        case CellTypes.Goal:
-          // Winning condition
-          set(() => ({
-            coordinates: newCoordinates,
-          }));
-          console.log('win');
-          break;
-        case CellTypes.Lava:
-          // Losing condition
-          set(() => ({
-            coordinates: newCoordinates,
-          }));
-          console.log('fail');
-          break;
-        default:
-          // Player should move
-          set(() => ({
-            coordinates: newCoordinates,
-          }));
+      if (moveData.shouldMove) {
+        set(() => ({
+          coordinates: moveData.newCoordinates,
+        }));
       }
     },
     rotate: (turnDirection: TurnDirection) => {
@@ -153,12 +112,6 @@ const useCoordinatesStore = create<CoordinatesStore>()(
             : state.rotationDegree - 90,
       }));
     },
-    level: levels[1],
-    setLevel: (newLevel) => set(() => ({ level: newLevel })),
-    CELL_SIZE: 50,
-    BORDER_SIZE: 1,
-    GAP_SIZE: 20,
-    BORDER_COLOR: '#bbbbbb',
   })),
 );
 
@@ -166,7 +119,6 @@ const useActionStore = create<ActionStore>()(
   devtools((set) => ({
     selectedActions: [],
     unselectedActions: [],
-    currentActions: [],
     toggleSelectedActions: (action) =>
       set((state) => {
         const isSelected = !!state.selectedActions.find(
@@ -194,4 +146,20 @@ const useActionStore = create<ActionStore>()(
   })),
 );
 
-export { useCoordinatesStore, useActionStore };
+// Will be used to modify settings by user.
+const useSettingsStore = create<SettingsStore>()(
+  devtools((set) => ({
+    CELL_SIZE: 50,
+    BORDER_SIZE: 1,
+    BORDER_COLOR: '#bbbbbb',
+    GAP_SIZE: 20,
+    setCellSize: (newCellSize) => set(() => ({ CELL_SIZE: newCellSize })),
+    setBorderSize: (newBorderSize) =>
+      set(() => ({ BORDER_SIZE: newBorderSize })),
+    setBorderColor: (newBorderColor) =>
+      set(() => ({ BORDER_COLOR: newBorderColor })),
+    setGapSize: (newGapSize) => set(() => ({ GAP_SIZE: newGapSize })),
+  })),
+);
+
+export { useCoordinatesStore, useActionStore, useSettingsStore };

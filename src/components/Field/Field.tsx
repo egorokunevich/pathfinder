@@ -1,17 +1,18 @@
-'use client';
-
 import { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import Cell from '@/src/components/Cell';
 import Player from '@/src/components/Player/Player';
 import getInitialRotationDegree from '@/src/helpers/getInitialRotationDegree';
-import { useCoordinatesStore } from '@/src/store';
+import { useCoordinatesStore, useSettingsStore } from '@/src/store';
 
 const Field = () => {
-  const { setCoordinates, setRotationDegree, level, GAP_SIZE } =
-    useCoordinatesStore();
+  const { setCoordinates, setRotationDegree, level } = useCoordinatesStore();
+
+  const { GAP_SIZE } = useSettingsStore();
+
   const field = level.field;
+
   useEffect(() => {
     setCoordinates(level.initialCoordinates);
     setRotationDegree(getInitialRotationDegree(level.initialViewDirection));

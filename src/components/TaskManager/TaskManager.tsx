@@ -1,32 +1,23 @@
-'use client';
-
-import { useEffect } from 'react';
-
 import ActionsToRun from '@/src/components/ActionsToRun';
 import AvailableActions from '@/src/components/AvailableActions';
 import { GoDirection } from '@/src/enums/GoDirection';
-import { useActionStore, useCoordinatesStore } from '@/src/store';
+import useActionDragAndDrop from '@/src/hooks/useActionDragAndDrop';
+import { useCoordinatesStore } from '@/src/store';
 
 const TaskManager = () => {
-  const { move, rotate, level } = useCoordinatesStore();
+  const { move, rotate } = useCoordinatesStore();
 
-  const { selectedActions, setUnselectedActions } = useActionStore();
+  const ACTION_DELAY = 250; // Time of delay between actions in milliseconds.
 
-  // List of available actions
-  const actionDirections = level.actions;
+  const {
+    selectedActions,
+    unselectedActions,
+    handleActionDrop,
+    handleContainerDrop,
+    handleActionClick,
+    handleActionDragStart,
+  } = useActionDragAndDrop();
 
-  useEffect(() => {
-    setUnselectedActions(
-      actionDirections.map((action, i) => {
-        return {
-          id: action + i,
-          action,
-        };
-      })
-    );
-  }, []);
-
-  // TODO: Clear setTimeouts
   const runActions = () => {
     selectedActions.forEach((item, id) => {
       setTimeout(() => {
@@ -38,14 +29,27 @@ const TaskManager = () => {
         } else {
           rotate(item.action);
         }
-      }, (id + 1) * 250);
+      }, ++id * ACTION_DELAY);
     });
   };
 
   return (
     <>
-      <ActionsToRun onRun={runActions} />
-      <AvailableActions />
+      <ActionsToRun
+        onRun={runActions}
+        actions={selectedActions}
+        handleActionClick={handleActionClick}
+        handleActionDragStart={handleActionDragStart}
+        handleActionDrop={handleActionDrop}
+        handleContainerDrop={handleContainerDrop}
+      />
+      <AvailableActions
+        actions={unselectedActions}
+        handleActionClick={handleActionClick}
+        handleActionDragStart={handleActionDragStart}
+        handleActionDrop={handleActionDrop}
+        handleContainerDrop={handleContainerDrop}
+      />
     </>
   );
 };

@@ -1,9 +1,10 @@
 import playerIcon from '/icons/arrow.png';
-import { useCoordinatesStore } from '@/src/store';
+import { useCoordinatesStore, useSettingsStore } from '@/src/store';
 
 const Player = () => {
-  const { coordinates, rotationDegree, CELL_SIZE, BORDER_SIZE, GAP_SIZE } =
-    useCoordinatesStore();
+  const { coordinates, rotationDegree } = useCoordinatesStore();
+
+  const { CELL_SIZE, BORDER_SIZE, GAP_SIZE } = useSettingsStore();
 
   const style = {
     left: `${
